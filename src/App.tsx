@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 const pitchClasses = [
   { label: 'C', offset: -9 },
@@ -120,6 +120,16 @@ export default function App() {
 
   // 各レンダリング時に最新の音名を計算
   const chordNoteNames = getChordNoteNames(selectedPitch, chordType)
+
+  useEffect(() => {
+    const newFreqs = getChordFrequencies()
+    if (!audioContextRef.current) return
+    const now = audioContextRef.current.currentTime
+    Object.entries(chordOscillatorsRef.current).forEach(([index, oscillator]) => {
+      oscillator.frequency.cancelScheduledValues(now)
+      oscillator.frequency.linearRampToValueAtTime(newFreqs[Number(index)], now + 0.05)
+    })
+  }, [aFrequency, selectedPitch, chordType, mode])
 
   return (
     <div style={{ padding: '1rem' }}>
