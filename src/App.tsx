@@ -29,8 +29,8 @@ function getChordNoteNames(selectedPitch: string, chordType: 'major' | 'minor'):
 // chordType: 'major' = 長三和音、'minor' = 短三和音
 // mode: 'equal' = 平均律、'just' = 純正律
 export default function App() {
-  const [aFrequency, setAFrequency] = useState(440)
-  const [selectedPitch, setSelectedPitch] = useState('A')
+  const [aFrequency, setAFrequency] = useState(442)
+  const [selectedPitch, setSelectedPitch] = useState('A#')
   const [chordType, setChordType] = useState<'major' | 'minor'>('major')
   const [mode, setMode] = useState<'equal' | 'just'>('equal')
   const [playingNotes, setPlayingNotes] = useState<boolean[]>([false, false, false])
