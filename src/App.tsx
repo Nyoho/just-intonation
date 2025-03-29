@@ -36,6 +36,22 @@ export default function App() {
   const [playingNotes, setPlayingNotes] = useState<boolean[]>([false, false, false])
   const audioContextRef = useRef<AudioContext | null>(null)
   const chordOscillatorsRef = useRef<{ [index: number]: OscillatorNode }>({})
+  // 最後にタッチした音のインデックスを追跡
+  const lastTouchedNoteRef = useRef<number | null>(null)
+  // オーディオコンテキストが初期化されたかどうかのフラグ
+  const [audioInitialized, setAudioInitialized] = useState(false)
+
+  // AudioContext の直接的な初期化（ユーザージェスチャーに紐づけるため）
+  function initAudioContext() {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new AudioContext();
+    }
+    if (audioContextRef.current.state === 'suspended') {
+      audioContextRef.current.resume();
+    }
+    setAudioInitialized(true);
+    return audioContextRef.current;
+  }
 
   // AudioContext の取得（存在しない場合は生成、サスペンド状態なら再開し完了を待つ）
   async function getAudioContext(): Promise<AudioContext> {
@@ -94,25 +110,61 @@ export default function App() {
     const freqs = getChordFrequencies()
     const freq = freqs[index]
     const context = await getAudioContext()
-    if (playingNotes[index]) {
+
+    try {
+      if (playingNotes[index]) {
+        if (chordOscillatorsRef.current[index]) {
+          try {
+            chordOscillatorsRef.current[index].stop()
+          } catch (e) {
+            console.error('オシレーターの停止中にエラーが発生しました:', e)
+          }
+          delete chordOscillatorsRef.current[index]
+        }
+
+        setPlayingNotes(prev => {
+          const newState = [...prev]
+          newState[index] = false
+          return newState
+        })
+      } else {
+        // 既存のオシレーターが残っていないか確認（念のため）
+        if (chordOscillatorsRef.current[index]) {
+          try {
+            chordOscillatorsRef.current[index].stop()
+          } catch (e) {
+            // 既に停止している可能性があるため、エラーを無視
+          }
+          delete chordOscillatorsRef.current[index]
+        }
+
+        const oscillator = context.createOscillator()
+        oscillator.frequency.value = freq
+        oscillator.connect(context.destination)
+        oscillator.start()
+        chordOscillatorsRef.current[index] = oscillator
+
+        setPlayingNotes(prev => {
+          const newState = [...prev]
+          newState[index] = true
+          return newState
+        })
+      }
+    } catch (error) {
+      console.error('音の制御中にエラーが発生しました:', error)
+      // エラー発生時は状態を一致させる
       if (chordOscillatorsRef.current[index]) {
-        chordOscillatorsRef.current[index].stop()
+        try {
+          chordOscillatorsRef.current[index].stop()
+        } catch (e) {
+          // 既に停止している可能性があるため、エラーを無視
+        }
         delete chordOscillatorsRef.current[index]
       }
+
       setPlayingNotes(prev => {
         const newState = [...prev]
         newState[index] = false
-        return newState
-      })
-    } else {
-      const oscillator = context.createOscillator()
-      oscillator.frequency.value = freq
-      oscillator.connect(context.destination)
-      oscillator.start()
-      chordOscillatorsRef.current[index] = oscillator
-      setPlayingNotes(prev => {
-        const newState = [...prev]
-        newState[index] = true
         return newState
       })
     }
@@ -120,6 +172,34 @@ export default function App() {
 
   // 各レンダリング時に最新の音名を計算
   const chordNoteNames = getChordNoteNames(selectedPitch, chordType)
+
+  // 全ての音を停止する関数
+  function stopAllNotes() {
+    Object.values(chordOscillatorsRef.current).forEach(osc => {
+      try {
+        osc.stop();
+      } catch (e) {
+        // 既に停止している場合などのエラーを無視
+      }
+    });
+    chordOscillatorsRef.current = {};
+    setPlayingNotes([false, false, false]);
+  }
+
+  // アンマウント時のクリーンアップ
+  useEffect(() => {
+    return () => {
+      if (audioContextRef.current) {
+        Object.values(chordOscillatorsRef.current).forEach(osc => {
+          try {
+            osc.stop();
+          } catch (e) {
+            // 既に停止している場合などのエラーを無視
+          }
+        });
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const newFreqs = getChordFrequencies()
@@ -132,7 +212,7 @@ export default function App() {
   }, [aFrequency, selectedPitch, chordType, mode])
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div style={{ padding: '1rem' }} onClick={initAudioContext}>
       <h1>3和音の純正律</h1>
       <div style={{ marginBottom: '1rem' }}>
         <label>
@@ -202,43 +282,107 @@ export default function App() {
       {/* 各和音（根音・第3音・第5音）のトグルボタン */}
       <div style={{ marginBottom: '1rem' }}>
         <h2>和音コントロール</h2>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button
-            onClick={() => toggleChordNote(0)}
-            style={{
-              backgroundColor: playingNotes[0] ? '#f44336' : '#e0e0e0',
-              color: playingNotes[0] ? '#fff' : '#000',
-              border: '1px solid #ccc',
-              padding: '0.5rem 1rem',
-              flex: 1,
-            }}
-          >
-            根音 ({chordNoteNames[0]})
-          </button>
-          <button
-            onClick={() => toggleChordNote(1)}
-            style={{
-              backgroundColor: playingNotes[1] ? '#f44336' : '#e0e0e0',
-              color: playingNotes[1] ? '#fff' : '#000',
-              border: '1px solid #ccc',
-              padding: '0.5rem 1rem',
-              flex: 1,
-            }}
-          >
-            第3音 ({chordNoteNames[1]})
-          </button>
-          <button
-            onClick={() => toggleChordNote(2)}
-            style={{
-              backgroundColor: playingNotes[2] ? '#f44336' : '#e0e0e0',
-              color: playingNotes[2] ? '#fff' : '#000',
-              border: '1px solid #ccc',
-              padding: '0.5rem 1rem',
-              flex: 1,
-            }}
-          >
-            第5音 ({chordNoteNames[2]})
-          </button>
+        <div
+          style={{
+            display: 'flex',
+            height: '120px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            overflow: 'hidden',
+            touchAction: 'none' // タッチイベントをブラウザの標準動作から切り離す
+          }}
+        >
+          {chordNoteNames.map((note, index) => (
+            <div
+              key={index}
+              style={{
+                flex: 1,
+                backgroundColor: playingNotes[index] ? '#f44336' : '#e0e0e0',
+                color: playingNotes[index] ? '#fff' : '#000',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                userSelect: 'none',
+                position: 'relative'
+              }}
+              onPointerDown={(e) => {
+                // モバイルの場合はonTouchStartで処理するため、ポインターイベントを無視
+                if (e.pointerType === 'touch') return;
+
+                e.preventDefault();
+                initAudioContext();
+                toggleChordNote(index);
+                lastTouchedNoteRef.current = index;
+              }}
+              onPointerEnter={(e) => {
+                // モバイルの場合はonTouchMoveで処理するため、ポインターイベントを無視
+                if (e.pointerType === 'touch') return;
+
+                // ポインターが押されている状態でエリアに入ってきた場合のみtoggle
+                if (e.buttons > 0 && lastTouchedNoteRef.current !== index) {
+                  e.preventDefault();
+                  toggleChordNote(index);
+                  lastTouchedNoteRef.current = index;
+                }
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault();
+                // タッチ時にAudioContextを直接初期化
+                initAudioContext();
+                toggleChordNote(index);
+                lastTouchedNoteRef.current = index;
+              }}
+              onTouchMove={(e) => {
+                // タッチ移動時のイベント処理
+                e.preventDefault();
+
+                try {
+                  // タッチ位置から要素を取得
+                  const touch = e.touches[0];
+                  if (!touch) return; // タッチが存在しない場合は何もしない
+
+                  const element = document.elementFromPoint(touch.clientX, touch.clientY);
+
+                  // 要素が見つからない場合は何もしない
+                  if (!element) return;
+
+                  // 要素がこの音のセルを表す場合は何もしない（既にポインターダウンで処理済み）
+                  if (element === e.currentTarget) return;
+
+                  // 親要素を確認して別の音のセルに移動したかどうかを判定
+                  const parentElements = chordNoteNames.map((_, i) => {
+                    return document.querySelector(`[data-note-index="${i}"]`);
+                  });
+
+                  // どの音のセルに移動したか判定
+                  for (let i = 0; i < parentElements.length; i++) {
+                    if (parentElements[i] &&
+                      (element === parentElements[i] || parentElements[i].contains(element)) &&
+                      i !== lastTouchedNoteRef.current) {
+                      // 別の音のセルに移動した場合、その音をトグル
+                      toggleChordNote(i);
+                      lastTouchedNoteRef.current = i;
+                      break;
+                    }
+                  }
+                } catch (error) {
+                  console.error('タッチ処理中にエラーが発生しました:', error);
+                }
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+              }}
+              onTouchCancel={(e) => {
+                e.preventDefault();
+              }}
+              data-note-index={index}
+            >
+              <div>
+                <div>{index === 0 ? '根音' : index === 1 ? '第3音' : '第5音'}</div>
+                <div>({note})</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
