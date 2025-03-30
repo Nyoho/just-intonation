@@ -40,6 +40,20 @@ export default function App() {
   const lastTouchedNoteRef = useRef<number | null>(null)
   // オーディオコンテキストが初期化されたかどうかのフラグ
   const [audioInitialized, setAudioInitialized] = useState(false)
+  // ダイアログのrefを追加
+  const startDialogRef = useRef<HTMLDialogElement>(null)
+
+  // コンポーネントマウント時にダイアログを表示
+  useEffect(() => {
+    // 少し遅延させてダイアログを表示（レンダリング完了後に実行するため）
+    const timer = setTimeout(() => {
+      if (startDialogRef.current && !audioInitialized) {
+        startDialogRef.current.showModal();
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // AudioContext の直接的な初期化（ユーザージェスチャーに紐づけるため）
   function initAudioContext() {
@@ -50,6 +64,12 @@ export default function App() {
       audioContextRef.current.resume();
     }
     setAudioInitialized(true);
+
+    // ダイアログを閉じる
+    if (startDialogRef.current && startDialogRef.current.open) {
+      startDialogRef.current.close();
+    }
+
     return audioContextRef.current;
   }
 
@@ -212,7 +232,44 @@ export default function App() {
   }, [aFrequency, selectedPitch, chordType, mode])
 
   return (
-    <div style={{ padding: '1rem' }} onClick={initAudioContext}>
+    <div style={{ padding: '1rem' }}>
+      {/* タップトゥースタートのダイアログ */}
+      <dialog
+        ref={startDialogRef}
+        onClick={initAudioContext}
+        style={{
+          padding: '2rem',
+          borderRadius: '8px',
+          border: '1px solid #ccc',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          textAlign: 'center',
+          width: '80%',
+          maxWidth: '400px',
+          cursor: 'pointer'
+        }}
+      >
+        <h2>3和音の純正律</h2>
+        <p>タップして音の出力開始</p>
+        <button
+          onClick={(e) => {
+            e.stopPropagation(); // ダイアログのクリックイベントとの重複を防止
+            initAudioContext();
+          }}
+          style={{
+            backgroundColor: '#4caf50',
+            color: 'white',
+            padding: '1rem 2rem',
+            borderRadius: '4px',
+            border: 'none',
+            fontSize: '1.2rem',
+            marginTop: '1rem',
+            cursor: 'pointer'
+          }}
+        >
+          音声の再生を開始する
+        </button>
+      </dialog>
+
       <h1>3和音の純正律</h1>
       <div style={{ marginBottom: '1rem' }}>
         <label>
