@@ -2,16 +2,16 @@ import { useState, useRef, useEffect } from 'react'
 
 const pitchClasses = [
   { label: 'C', offset: -9 },
-  { label: 'C#', offset: -8 },
+  { label: 'C♯/D♭', offset: -8 },
   { label: 'D', offset: -7 },
-  { label: 'D#', offset: -6 },
+  { label: 'D♯/E♭', offset: -6 },
   { label: 'E', offset: -5 },
   { label: 'F', offset: -4 },
-  { label: 'F#', offset: -3 },
+  { label: 'F♯/G♭', offset: -3 },
   { label: 'G', offset: -2 },
-  { label: 'G#', offset: -1 },
+  { label: 'G♯/A♭', offset: -1 },
   { label: 'A', offset: 0 },
-  { label: 'A#', offset: 1 },
+  { label: 'A♯/B♭', offset: 1 },
   { label: 'B', offset: 2 },
 ]
 
@@ -30,7 +30,7 @@ function getChordNoteNames(selectedPitch: string, chordType: 'major' | 'minor'):
 // mode: 'equal' = 平均律、'just' = 純正律
 export default function App() {
   const [aFrequency, setAFrequency] = useState(442)
-  const [selectedPitch, setSelectedPitch] = useState('A#')
+  const [selectedPitch, setSelectedPitch] = useState('A♯/B♭')
   const [chordType, setChordType] = useState<'major' | 'minor'>('major')
   const [mode, setMode] = useState<'equal' | 'just'>('equal')
   const [playingNotes, setPlayingNotes] = useState<boolean[]>([false, false, false])
