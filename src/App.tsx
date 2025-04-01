@@ -328,12 +328,44 @@ export default function App() {
       </div>
 
       <div style={{ marginBottom: '1rem' }}>
-        <button onClick={() => setMode(mode === 'equal' ? 'just' : 'equal')}>
-          {mode === 'equal' ? '純正律に切替' : '平均律に切替'}
-        </button>
-        <span style={{ marginLeft: '1rem' }}>
-          現在のモード: {mode === 'equal' ? '平均律' : '純正律'}
-        </span>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div style={{
+            display: 'flex',
+            border: '1px solid #ccc',
+            borderRadius: '6px',
+            overflow: 'hidden'
+          }}>
+            <button
+              onClick={() => setMode('equal')}
+              style={{
+                padding: '0.5rem 2rem',
+                backgroundColor: mode === 'equal' ? '#4caf50' : 'transparent',
+                color: mode === 'equal' ? '#fff' : '#000',
+                border: 'none',
+                borderRight: '1px solid #ccc',
+                borderRadius: '0',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              平均律
+            </button>
+            <button
+              onClick={() => setMode('just')}
+              style={{
+                padding: '0.5rem 2rem',
+                backgroundColor: mode === 'just' ? '#4caf50' : 'transparent',
+                color: mode === 'just' ? '#fff' : '#000',
+                border: 'none',
+                borderRadius: '0',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              純正律
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* 各和音（根音・第3音・第5音）のトグルボタン */}
