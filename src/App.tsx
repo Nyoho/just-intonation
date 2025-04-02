@@ -370,7 +370,7 @@ export default function App() {
 
       {/* 各和音（根音・第3音・第5音）のトグルボタン */}
       <div style={{ marginBottom: '1rem' }}>
-        <h2>和音コントロール</h2>
+        <h2>各音のon/off</h2>
         <div
           style={{
             display: 'flex',
