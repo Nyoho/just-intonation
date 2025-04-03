@@ -248,8 +248,8 @@ export default function App() {
           cursor: 'pointer'
         }}
       >
-        <h2>3和音の純正律</h2>
-        <p>タップして音の出力開始</p>
+        <h2>純正律体験機</h2>
+        <p>3和音の純正律の体験ができます。特に第3音がどう違うか聞いてみましょう。</p>
         <button
           onClick={(e) => {
             e.stopPropagation(); // ダイアログのクリックイベントとの重複を防止
@@ -270,7 +270,7 @@ export default function App() {
         </button>
       </dialog>
 
-      <h1>3和音の純正律</h1>
+      <h1>純正律体験機</h1>
       <div style={{ marginBottom: '1rem' }}>
         <label>
           A の周波数 (Hz):
