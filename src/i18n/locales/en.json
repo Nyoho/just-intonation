@@ -1,0 +1,23 @@
+{
+  "title": "Just Intonation Triads",
+  "aFrequency": "A Frequency (Hz):",
+  "rootNote": "Root Note:",
+  "chordType": "Chord Type:",
+  "majorChord": "Major Triad",
+  "minorChord": "Minor Triad",
+  "mode": "Mode:",
+  "equalTemperament": "Equal Temperament",
+  "justIntonation": "Just Intonation",
+  "chordControl": "Chord Control",
+  "rootText": "Root",
+  "thirdText": "3rd",
+  "fifthText": "5th",
+  "startPrompt": "Tap anywhere to start audio",
+  "startButton": "Start Audio",
+  "octave": "Octave:",
+  "waveform": "Waveform:",
+  "sine": "Sine",
+  "square": "Square",
+  "sawtooth": "Sawtooth",
+  "triangle": "Triangle"
+}

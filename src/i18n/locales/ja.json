@@ -1,0 +1,23 @@
+{
+  "title": "3和音の純正律",
+  "aFrequency": "A の周波数 (Hz):",
+  "rootNote": "根音:",
+  "chordType": "和音タイプ:",
+  "majorChord": "長三和音",
+  "minorChord": "短三和音",
+  "mode": "モード:",
+  "equalTemperament": "平均律",
+  "justIntonation": "純正律",
+  "chordControl": "和音コントロール",
+  "rootText": "根音",
+  "thirdText": "第3音",
+  "fifthText": "第5音",
+  "startPrompt": "どこでもタップして音声を開始",
+  "startButton": "音声の再生を開始する",
+  "octave": "オクターブ:",
+  "waveform": "音色:",
+  "sine": "サイン波",
+  "square": "矩形波",
+  "sawtooth": "のこぎり波",
+  "triangle": "三角波"
+}
