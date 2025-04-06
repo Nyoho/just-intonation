@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const pitchClasses = [
   { label: 'C', offset: -9 },
@@ -29,6 +30,8 @@ function getChordNoteNames(selectedPitch: string, chordType: 'major' | 'minor'):
 // chordType: 'major' = 長三和音、'minor' = 短三和音
 // mode: 'equal' = 平均律、'just' = 純正律
 export default function App() {
+  const { t } = useTranslation(); // i18n翻訳用フック
+
   const [aFrequency, setAFrequency] = useState(442)
   const [selectedPitch, setSelectedPitch] = useState('A♯/B♭')
   const [chordType, setChordType] = useState<'major' | 'minor'>('major')
@@ -248,8 +251,8 @@ export default function App() {
           cursor: 'pointer'
         }}
       >
-        <h2>純正律体験機</h2>
-        <p>3和音の純正律の体験ができます。特に第3音がどう違うか聞いてみましょう。</p>
+        <h2>{t('title')}</h2>
+        <p>{t('startPrompt')}</p>
         <button
           onClick={(e) => {
             e.stopPropagation(); // ダイアログのクリックイベントとの重複を防止
@@ -266,14 +269,14 @@ export default function App() {
             cursor: 'pointer'
           }}
         >
-          音声の再生を開始する
+          {t('startButton')}
         </button>
       </dialog>
 
-      <h1>純正律体験機</h1>
+      <h1>{t('title')}</h1>
       <div style={{ marginBottom: '1rem' }}>
         <label>
-          A の周波数 (Hz):
+          {t('aFrequency')}
           <input
             type="number"
             value={aFrequency}
@@ -285,7 +288,7 @@ export default function App() {
 
       {/* 根音選択：12音ピアノ風の横並びボタン */}
       <div style={{ marginBottom: '1rem' }}>
-        <span>根音: </span>
+        <span>{t('rootNote')} </span>
         {pitchClasses.map(p => (
           <button
             key={p.label}
@@ -304,7 +307,7 @@ export default function App() {
       </div>
 
       <div style={{ marginBottom: '1rem' }}>
-        <span>和音タイプ: </span>
+        <span>{t('chordType')} </span>
         <label style={{ marginLeft: '0.5rem' }}>
           <input
             type="radio"
@@ -313,7 +316,7 @@ export default function App() {
             checked={chordType === 'major'}
             onChange={() => setChordType('major')}
           />
-          長三和音
+          {t('majorChord')}
         </label>
         <label style={{ marginLeft: '0.5rem' }}>
           <input
@@ -323,46 +326,46 @@ export default function App() {
             checked={chordType === 'minor'}
             onChange={() => setChordType('minor')}
           />
-          短三和音
+          {t('minorChord')}
         </label>
       </div>
 
       <div style={{ marginBottom: '1rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <span>{t('mode')}: </span>
           <div style={{
             display: 'flex',
             border: '1px solid #ccc',
             borderRadius: '6px',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            marginLeft: '0.5rem'
           }}>
             <button
               onClick={() => setMode('equal')}
               style={{
-                padding: '0.5rem 2rem',
+                padding: '0.5rem 1rem',
                 backgroundColor: mode === 'equal' ? '#4caf50' : 'transparent',
                 color: mode === 'equal' ? '#fff' : '#000',
                 border: 'none',
                 borderRight: '1px solid #ccc',
-                borderRadius: '0',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease'
               }}
             >
-              平均律
+              {t('equalTemperament')}
             </button>
             <button
               onClick={() => setMode('just')}
               style={{
-                padding: '0.5rem 2rem',
+                padding: '0.5rem 1rem',
                 backgroundColor: mode === 'just' ? '#4caf50' : 'transparent',
                 color: mode === 'just' ? '#fff' : '#000',
                 border: 'none',
-                borderRadius: '0',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease'
               }}
             >
-              純正律
+              {t('justIntonation')}
             </button>
           </div>
         </div>
@@ -370,7 +373,7 @@ export default function App() {
 
       {/* 各和音（根音・第3音・第5音）のトグルボタン */}
       <div style={{ marginBottom: '1rem' }}>
-        <h2>各音のon/off</h2>
+        <h2>{t('chordControl')}</h2>
         <div
           style={{
             display: 'flex',
@@ -467,7 +470,7 @@ export default function App() {
               data-note-index={index}
             >
               <div>
-                <div>{index === 0 ? '根音' : index === 1 ? '第3音' : '第5音'}</div>
+                <div>{index === 0 ? t('rootText') : index === 1 ? t('thirdText') : t('fifthText')}</div>
                 <div>({note})</div>
               </div>
             </div>
