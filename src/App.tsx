@@ -32,8 +32,20 @@ function getChordNoteNames(selectedPitch: string, chordType: 'major' | 'minor'):
 export default function App() {
   const { t } = useTranslation(); // i18n翻訳用フック
 
-  const [aFrequency, setAFrequency] = useState(442)
-  const [selectedPitch, setSelectedPitch] = useState('A♯/B♭')
+  // ローカルストレージから設定を読み込む
+  const loadInitialValues = () => {
+    const savedFreq = localStorage.getItem('aFrequency');
+    const savedPitch = localStorage.getItem('selectedPitch');
+    return {
+      freq: savedFreq ? Number(savedFreq) : 442,
+      pitch: savedPitch || 'A♯/B♭'
+    };
+  };
+
+  const initialValues = loadInitialValues();
+
+  const [aFrequency, setAFrequency] = useState(initialValues.freq)
+  const [selectedPitch, setSelectedPitch] = useState(initialValues.pitch)
   const [chordType, setChordType] = useState<'major' | 'minor'>('major')
   const [mode, setMode] = useState<'equal' | 'just'>('equal')
   const [playingNotes, setPlayingNotes] = useState<boolean[]>([false, false, false])
@@ -57,6 +69,12 @@ export default function App() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // 設定変更時にローカルストレージに保存
+  useEffect(() => {
+    localStorage.setItem('aFrequency', String(aFrequency));
+    localStorage.setItem('selectedPitch', selectedPitch);
+  }, [aFrequency, selectedPitch]);
 
   // AudioContext の直接的な初期化（ユーザージェスチャーに紐づけるため）
   function initAudioContext() {
