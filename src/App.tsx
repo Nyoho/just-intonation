@@ -48,6 +48,7 @@ export default function App() {
   const [selectedPitch, setSelectedPitch] = useState(initialValues.pitch)
   const [chordType, setChordType] = useState<'major' | 'minor'>('major')
   const [mode, setMode] = useState<'equal' | 'just'>('equal')
+  const [octave, setOctave] = useState<number>(0) // オクターブ調整（-2～+2）
   const [playingNotes, setPlayingNotes] = useState<boolean[]>([false, false, false])
   const audioContextRef = useRef<AudioContext | null>(null)
   const chordOscillatorsRef = useRef<{ [index: number]: OscillatorNode }>({})
@@ -109,7 +110,8 @@ export default function App() {
   function getRootFrequency(): number {
     const pitch = pitchClasses.find(p => p.label === selectedPitch)
     if (!pitch) return aFrequency
-    return aFrequency * Math.pow(2, pitch.offset / 12)
+    // オクターブ調整を加える
+    return aFrequency * Math.pow(2, pitch.offset / 12) * Math.pow(2, octave)
   }
 
   // chordType と mode により和音の各音の周波数配列を返す
@@ -250,7 +252,7 @@ export default function App() {
       oscillator.frequency.cancelScheduledValues(now)
       oscillator.frequency.linearRampToValueAtTime(newFreqs[Number(index)], now + 0.05)
     })
-  }, [aFrequency, selectedPitch, chordType, mode])
+  }, [aFrequency, selectedPitch, chordType, mode, octave])
 
   return (
     <div style={{ padding: '1rem' }}>
@@ -346,6 +348,37 @@ export default function App() {
           />
           {t('minorChord')}
         </label>
+      </div>
+      
+      {/* オクターブ選択 */}
+      <div style={{ marginBottom: '1rem' }}>
+        <span>{t('octave')} </span>
+        <div style={{
+          display: 'flex',
+          border: '1px solid #ccc',
+          borderRadius: '6px',
+          overflow: 'hidden',
+          display: 'inline-flex',
+          marginLeft: '0.5rem'
+        }}>
+          {[-2, -1, 0, 1, 2].map(oct => (
+            <button
+              key={oct}
+              onClick={() => setOctave(oct)}
+              style={{
+                padding: '0.5rem 0.7rem',
+                backgroundColor: octave === oct ? '#4caf50' : 'transparent',
+                color: octave === oct ? '#fff' : '#000',
+                border: 'none',
+                borderRight: oct !== 2 ? '1px solid #ccc' : 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {oct > 0 ? `+${oct}` : oct}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div style={{ marginBottom: '1rem' }}>
