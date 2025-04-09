@@ -16,6 +16,9 @@ const pitchClasses = [
   { label: 'B', offset: 2 },
 ]
 
+// 波形の種類
+const waveforms: OscillatorType[] = ['sine', 'square', 'sawtooth', 'triangle'];
+
 // 和音の音名を取得する関数
 function getChordNoteNames(selectedPitch: string, chordType: 'major' | 'minor'): string[] {
   const selectedIndex = pitchClasses.findIndex(p => p.label === selectedPitch)
@@ -49,9 +52,11 @@ export default function App() {
   const [chordType, setChordType] = useState<'major' | 'minor'>('major')
   const [mode, setMode] = useState<'equal' | 'just'>('equal')
   const [octave, setOctave] = useState<number>(0) // オクターブ調整（-2～+2）
+  const [waveform, setWaveform] = useState<OscillatorType>('sine') // 波形タイプ
   const [playingNotes, setPlayingNotes] = useState<boolean[]>([false, false, false])
   const audioContextRef = useRef<AudioContext | null>(null)
   const chordOscillatorsRef = useRef<{ [index: number]: OscillatorNode }>({})
+  const gainNodesRef = useRef<{ [index: number]: GainNode }>({})
   // 最後にタッチした音のインデックスを追跡
   const lastTouchedNoteRef = useRef<number | null>(null)
   // オーディオコンテキストが初期化されたかどうかのフラグ
@@ -163,6 +168,7 @@ export default function App() {
             console.error('オシレーターの停止中にエラーが発生しました:', e)
           }
           delete chordOscillatorsRef.current[index]
+          delete gainNodesRef.current[index]
         }
 
         setPlayingNotes(prev => {
@@ -179,13 +185,24 @@ export default function App() {
             // 既に停止している可能性があるため、エラーを無視
           }
           delete chordOscillatorsRef.current[index]
+          delete gainNodesRef.current[index]
         }
 
+        // GainNodeを作成して音量を調整
+        const gainNode = context.createGain();
+        gainNode.gain.value = 0.7; // 音量を0.7（最大1.0）に設定
+
         const oscillator = context.createOscillator()
+        oscillator.type = waveform;
         oscillator.frequency.value = freq
-        oscillator.connect(context.destination)
+
+        // オシレーターをGainNodeに接続し、GainNodeを出力先に接続
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
+
         oscillator.start()
         chordOscillatorsRef.current[index] = oscillator
+        gainNodesRef.current[index] = gainNode
 
         setPlayingNotes(prev => {
           const newState = [...prev]
@@ -203,6 +220,7 @@ export default function App() {
           // 既に停止している可能性があるため、エラーを無視
         }
         delete chordOscillatorsRef.current[index]
+        delete gainNodesRef.current[index]
       }
 
       setPlayingNotes(prev => {
@@ -226,6 +244,7 @@ export default function App() {
       }
     });
     chordOscillatorsRef.current = {};
+    gainNodesRef.current = {};
     setPlayingNotes([false, false, false]);
   }
 
@@ -240,6 +259,8 @@ export default function App() {
             // 既に停止している場合などのエラーを無視
           }
         });
+        chordOscillatorsRef.current = {};
+        gainNodesRef.current = {};
       }
     };
   }, []);
@@ -249,10 +270,12 @@ export default function App() {
     if (!audioContextRef.current) return
     const now = audioContextRef.current.currentTime
     Object.entries(chordOscillatorsRef.current).forEach(([index, oscillator]) => {
+      // 波形も更新
+      oscillator.type = waveform;
       oscillator.frequency.cancelScheduledValues(now)
       oscillator.frequency.linearRampToValueAtTime(newFreqs[Number(index)], now + 0.05)
     })
-  }, [aFrequency, selectedPitch, chordType, mode, octave])
+  }, [aFrequency, selectedPitch, chordType, mode, octave, waveform])
 
   return (
     <div style={{ padding: '1rem' }}>
@@ -349,7 +372,7 @@ export default function App() {
           {t('minorChord')}
         </label>
       </div>
-      
+
       {/* オクターブ選択 */}
       <div style={{ marginBottom: '1rem' }}>
         <span>{t('octave')} </span>
@@ -376,6 +399,37 @@ export default function App() {
               }}
             >
               {oct > 0 ? `+${oct}` : oct}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 波形選択 */}
+      <div style={{ marginBottom: '1rem' }}>
+        <span>{t('waveform')} </span>
+        <div style={{
+          display: 'flex',
+          border: '1px solid #ccc',
+          borderRadius: '6px',
+          overflow: 'hidden',
+          display: 'inline-flex',
+          marginLeft: '0.5rem'
+        }}>
+          {waveforms.map((wave, index) => (
+            <button
+              key={wave}
+              onClick={() => setWaveform(wave)}
+              style={{
+                padding: '0.5rem 0.7rem',
+                backgroundColor: waveform === wave ? '#4caf50' : 'transparent',
+                color: waveform === wave ? '#fff' : '#000',
+                border: 'none',
+                borderRight: index !== waveforms.length - 1 ? '1px solid #ccc' : 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {t(wave)}
             </button>
           ))}
         </div>
