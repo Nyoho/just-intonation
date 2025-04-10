@@ -319,7 +319,7 @@ export default function App() {
       <h1>{t('title')}</h1>
       <div style={{ marginBottom: '1rem' }}>
         <label>
-          {t('aFrequency')}
+          {t('aFrequency')}: 
           <input
             type="number"
             value={aFrequency}
@@ -331,7 +331,7 @@ export default function App() {
 
       {/* 根音選択：12音ピアノ風の横並びボタン */}
       <div style={{ marginBottom: '1rem' }}>
-        <span>{t('rootNote')} </span>
+        <span>{t('rootNote')}: </span>
         {pitchClasses.map(p => (
           <button
             key={p.label}
@@ -350,7 +350,7 @@ export default function App() {
       </div>
 
       <div style={{ marginBottom: '1rem' }}>
-        <span>{t('chordType')} </span>
+        <span>{t('chordType')}: </span>
         <label style={{ marginLeft: '0.5rem' }}>
           <input
             type="radio"
@@ -375,7 +375,7 @@ export default function App() {
 
       {/* オクターブ選択 */}
       <div style={{ marginBottom: '1rem' }}>
-        <span>{t('octave')} </span>
+        <span>{t('octave')}: </span>
         <div style={{
           display: 'flex',
           border: '1px solid #ccc',
@@ -406,7 +406,7 @@ export default function App() {
 
       {/* 波形選択 */}
       <div style={{ marginBottom: '1rem' }}>
-        <span>{t('waveform')} </span>
+        <span>{t('waveform')}: </span>
         <div style={{
           display: 'flex',
           border: '1px solid #ccc',
