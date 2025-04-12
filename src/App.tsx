@@ -278,7 +278,7 @@ export default function App() {
   }, [aFrequency, selectedPitch, chordType, mode, octave, waveform])
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div style={{ padding: '1rem', margin: '0 auto', maxWidth: '800px' }}>
       {/* タップトゥースタートのダイアログ */}
       <dialog
         ref={startDialogRef}
