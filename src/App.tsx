@@ -553,7 +553,7 @@ export default function App() {
 
                   // どの音のセルに移動したか判定
                   for (let i = 0; i < parentElements.length; i++) {
-                    if (parentElements[i] &&
+                    if (parentElements[i] && // null チェックを追加
                       (element === parentElements[i] || parentElements[i].contains(element)) &&
                       i !== lastTouchedNoteRef.current) {
                       // 別の音のセルに移動した場合、その音をトグル
