@@ -377,7 +377,6 @@ export default function App() {
       <div style={{ marginBottom: '1rem' }}>
         <span>{t('octave')}: </span>
         <div style={{
-          display: 'flex',
           border: '1px solid #ccc',
           borderRadius: '6px',
           overflow: 'hidden',
@@ -408,7 +407,6 @@ export default function App() {
       <div style={{ marginBottom: '1rem' }}>
         <span>{t('waveform')}: </span>
         <div style={{
-          display: 'flex',
           border: '1px solid #ccc',
           borderRadius: '6px',
           overflow: 'hidden',
@@ -452,7 +450,6 @@ export default function App() {
                 backgroundColor: mode === 'equal' ? '#4caf50' : 'transparent',
                 color: mode === 'equal' ? '#fff' : '#000',
                 border: 'none',
-                borderRight: '1px solid #ccc',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease'
               }}
