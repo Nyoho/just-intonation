@@ -571,9 +571,9 @@ export default function App() {
               }}
               data-note-index={index}
             >
-              <div>
+              <div style={{textAlign: 'center'}}>
                 <div>{index === 0 ? t('rootText') : index === 1 ? t('thirdText') : t('fifthText')}</div>
-                <div>({note})</div>
+                <div style={{fontSize: 'larger'}}>{note}</div>
               </div>
             </div>
           ))}
