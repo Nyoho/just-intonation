@@ -433,23 +433,26 @@ export default function App() {
         </div>
       </div>
 
+      <p style={{fontSize: 'small'}}>平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
+
       <div style={{ marginBottom: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span>{t('mode')}: </span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{
             display: 'flex',
+            flexGrow: 1,
             border: '1px solid #ccc',
             borderRadius: '6px',
-            overflow: 'hidden',
-            marginLeft: '0.5rem'
+            overflow: 'hidden'
           }}>
             <button
               onClick={() => setMode('equal')}
               style={{
+                flex: 1,
                 padding: '0.5rem 1rem',
                 backgroundColor: mode === 'equal' ? '#4caf50' : 'transparent',
                 color: mode === 'equal' ? '#fff' : '#000',
                 border: 'none',
+                borderRight: '1px solid #ccc', // 区切り線を追加
                 cursor: 'pointer',
                 transition: 'all 0.2s ease'
               }}
@@ -459,6 +462,7 @@ export default function App() {
             <button
               onClick={() => setMode('just')}
               style={{
+                flex: 1,
                 padding: '0.5rem 1rem',
                 backgroundColor: mode === 'just' ? '#4caf50' : 'transparent',
                 color: mode === 'just' ? '#fff' : '#000',
@@ -475,7 +479,6 @@ export default function App() {
 
       {/* 各和音（根音・第3音・第5音）のトグルボタン */}
       <div style={{ marginBottom: '1rem' }}>
-        <h2>{t('chordControl')}</h2>
         <div
           style={{
             display: 'flex',
@@ -571,9 +574,9 @@ export default function App() {
               }}
               data-note-index={index}
             >
-              <div style={{textAlign: 'center'}}>
+              <div style={{ textAlign: 'center' }}>
                 <div>{index === 0 ? t('rootText') : index === 1 ? t('thirdText') : t('fifthText')}</div>
-                <div style={{fontSize: 'larger'}}>{note}</div>
+                <div style={{ fontSize: 'larger' }}>{note}</div>
               </div>
             </div>
           ))}
