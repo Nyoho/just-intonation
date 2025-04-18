@@ -325,7 +325,7 @@ export default function App() {
       <h1>{t('title')}</h1>
       <div style={{ marginBottom: '1rem' }}>
         <label>
-          {t('aFrequency')}: 
+          {t('aFrequency')}:
           <input
             type="number"
             value={aFrequency}
@@ -439,7 +439,7 @@ export default function App() {
         </div>
       </div>
 
-      <p style={{fontSize: 'small'}}>平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
+      <p style={{ fontSize: 'small' }}>平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
 
       <div style={{ marginBottom: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
