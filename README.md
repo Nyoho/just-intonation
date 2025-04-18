@@ -1,50 +1,47 @@
-# React + TypeScript + Vite
+# Just Intonation Chord Player
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+https://nyoho.github.io/just-intonation/
 
-Currently, two official plugins are available:
+This is a web application that allows you to play major and minor chords in both equal temperament and just intonation. You can adjust the base frequency of A4, select the root note, choose the chord type (major/minor), switch between equal temperament and just intonation, adjust the octave, and select the waveform (sine, square, sawtooth, triangle).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+*   **Play Chords:** Click or tap the buttons for the root, third, and fifth notes to play the chord components.
+*   **Select Root Note:** Choose the root note of the chord from C to B using the piano-style buttons.
+*   **Choose Chord Type:** Select between major and minor chords.
+*   **Switch Tuning:** Toggle between Equal Temperament and Just Intonation.
+*   **Adjust A4 Frequency:** Set the reference frequency for A4 (default is 442 Hz).
+*   **Octave Adjustment:** Shift the octave of the chord up or down (-2 to +2).
+*   **Waveform Selection:** Choose the sound wave type (sine, square, sawtooth, triangle).
+*   **Responsive Design:** Buttons are designed to be easily clickable/tappable on various devices.
+*   **Audio Initialization:** Requires user interaction (click/tap) to start the audio context for browser compatibility.
+*   **Localization:** Supports English and Japanese (based on i18next setup).
+*   **Settings Persistence:** Saves A4 frequency and selected root note to local storage.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## How to Use
 
-- Configure the top-level `parserOptions` property like this:
+1.  **Start Audio:** Click the "Start" button or anywhere on the initial dialog to enable audio.
+2.  **Set Parameters:**
+    *   Adjust the "A4 Frequency" if needed.
+    *   Select the desired "Root Note".
+    *   Choose "Major" or "Minor" for the "Chord Type".
+    *   Select the "Octave" shift.
+    *   Choose the desired "Waveform".
+    *   Switch between "Equal Temperament" and "Just Intonation".
+3.  **Play Notes:** Click or tap on the large buttons labeled "Root", "Third", and "Fifth" to play/stop the individual notes of the chord. You can play multiple notes simultaneously.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Technologies Used
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+*   React
+*   TypeScript
+*   Vite
+*   Web Audio API
+*   i18next (for localization)
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Development
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+To run this project locally:
+
+1.  Clone the repository.
+2.  Install dependencies: `pnpm install` (or `npm install` / `yarn install`)
+3.  Start the development server: `pnpm dev` (or `npm run dev` / `yarn dev`)
