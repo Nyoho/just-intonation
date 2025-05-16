@@ -284,7 +284,7 @@ export default function App() {
   }, [aFrequency, selectedPitch, chordType, mode, octave, waveform])
 
   return (
-    <div style={{ padding: '1rem', margin: '0 auto', maxWidth: '800px' }}>
+    <div style={{ padding: '1rem', margin: '0 auto', maxWidth: '800px', '--accent-color': '#0D8387' }}>
       {/* タップトゥースタートのダイアログ */}
       <dialog
         ref={startDialogRef}
@@ -308,7 +308,7 @@ export default function App() {
             initAudioContext();
           }}
           style={{
-            backgroundColor: '#4caf50',
+            backgroundColor: 'var(--accent-color)',
             color: 'white',
             padding: '1rem 2rem',
             borderRadius: '4px',
@@ -344,7 +344,7 @@ export default function App() {
             onClick={() => setSelectedPitch(p.label)}
             style={{
               margin: '0 0.25rem',
-              backgroundColor: selectedPitch === p.label ? '#4caf50' : '#e0e0e0',
+              backgroundColor: selectedPitch === p.label ? 'var(--accent-color)' : '#e0e0e0',
               color: selectedPitch === p.label ? '#fff' : '#000',
               border: '1px solid #ccc',
               padding: '0.25rem 0.5rem',
@@ -395,7 +395,7 @@ export default function App() {
               onClick={() => setOctave(oct)}
               style={{
                 padding: '0.5rem 0.7rem',
-                backgroundColor: octave === oct ? '#4caf50' : 'transparent',
+                backgroundColor: octave === oct ? 'var(--accent-color)' : 'transparent',
                 color: octave === oct ? '#fff' : '#000',
                 border: 'none',
                 borderRight: oct !== 2 ? '1px solid #ccc' : 'none',
@@ -425,7 +425,7 @@ export default function App() {
               onClick={() => setWaveform(wave)}
               style={{
                 padding: '0.5rem 0.7rem',
-                backgroundColor: waveform === wave ? '#4caf50' : 'transparent',
+                backgroundColor: waveform === wave ? 'var(--accent-color)' : 'transparent',
                 color: waveform === wave ? '#fff' : '#000',
                 border: 'none',
                 borderRight: index !== waveforms.length - 1 ? '1px solid #ccc' : 'none',
@@ -455,7 +455,7 @@ export default function App() {
               style={{
                 flex: 1,
                 padding: '0.5rem 1rem',
-                backgroundColor: mode === 'equal' ? '#4caf50' : 'transparent',
+                backgroundColor: mode === 'equal' ? 'var(--accent-color)' : 'transparent',
                 color: mode === 'equal' ? '#fff' : '#000',
                 border: 'none',
                 borderRight: '1px solid #ccc', // 区切り線を追加
@@ -470,7 +470,7 @@ export default function App() {
               style={{
                 flex: 1,
                 padding: '0.5rem 1rem',
-                backgroundColor: mode === 'just' ? '#4caf50' : 'transparent',
+                backgroundColor: mode === 'just' ? 'var(--accent-color)' : 'transparent',
                 color: mode === 'just' ? '#fff' : '#000',
                 border: 'none',
                 cursor: 'pointer',
