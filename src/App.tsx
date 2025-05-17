@@ -69,7 +69,7 @@ export default function App() {
     // 少し遅延させてダイアログを表示（レンダリング完了後に実行するため）
     const timer = setTimeout(() => {
       if (startDialogRef.current && !audioInitialized) {
-        startDialogRef.current.showModal();
+        startDialogRef.current.show();
       }
     }, 100);
 
@@ -284,21 +284,12 @@ export default function App() {
   }, [aFrequency, selectedPitch, chordType, mode, octave, waveform])
 
   return (
-    <div style={{ padding: '1rem', margin: '0 auto', maxWidth: '800px', '--accent-color': '#0D8387' }}>
+    <div className="p-4 mx-auto max-w-3xl">
       {/* タップトゥースタートのダイアログ */}
       <dialog
         ref={startDialogRef}
         onClick={initAudioContext}
-        style={{
-          padding: '2rem',
-          borderRadius: '8px',
-          border: '1px solid #ccc',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-          textAlign: 'center',
-          width: '80%',
-          maxWidth: '400px',
-          cursor: 'pointer'
-        }}
+        className="p-8 rounded-lg border border-gray-300 shadow-md text-center w-4/5 max-w-md cursor-pointer"
       >
         <h2>{t('title')}</h2>
         <p>{t('startPrompt')}</p>
@@ -307,57 +298,42 @@ export default function App() {
             e.stopPropagation(); // ダイアログのクリックイベントとの重複を防止
             initAudioContext();
           }}
-          style={{
-            backgroundColor: 'var(--accent-color)',
-            color: 'white',
-            padding: '1rem 2rem',
-            borderRadius: '4px',
-            border: 'none',
-            fontSize: '1.2rem',
-            marginTop: '1rem',
-            cursor: 'pointer'
-          }}
+          className="bg-accent text-black px-8 py-4 rounded border-none text-xl mt-4 cursor-pointer"
         >
           {t('startButton')}
         </button>
       </dialog>
 
       <h1>{t('title')}</h1>
-      <div style={{ marginBottom: '1rem' }}>
+      <div className="mb-4">
         <label>
           {t('aFrequency')}:
           <input
             type="number"
             value={aFrequency}
             onChange={e => setAFrequency(Number(e.target.value))}
-            style={{ marginLeft: '0.5rem' }}
+            className="ml-2"
           />
         </label>
       </div>
 
       {/* 根音選択：12音ピアノ風の横並びボタン */}
-      <div style={{ marginBottom: '1rem' }}>
+      <div className="mb-4">
         <span>{t('rootNote')}: </span>
         {pitchClasses.map(p => (
           <button
             key={p.label}
             onClick={() => setSelectedPitch(p.label)}
-            style={{
-              margin: '0 0.25rem',
-              backgroundColor: selectedPitch === p.label ? 'var(--accent-color)' : '#e0e0e0',
-              color: selectedPitch === p.label ? '#fff' : '#000',
-              border: '1px solid #ccc',
-              padding: '0.25rem 0.5rem',
-            }}
+            className={`m-1 px-2 py-1 border border-gray-300 ${selectedPitch === p.label ? 'bg-accent text-white' : 'bg-gray-200 text-black'}`}
           >
             {p.label}
           </button>
         ))}
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
+      <div className="mb-4">
         <span>{t('chordType')}: </span>
-        <label style={{ marginLeft: '0.5rem' }}>
+        <label className="ml-2">
           <input
             type="radio"
             name="chordType"
@@ -367,7 +343,7 @@ export default function App() {
           />
           {t('majorChord')}
         </label>
-        <label style={{ marginLeft: '0.5rem' }}>
+        <label className="ml-2">
           <input
             type="radio"
             name="chordType"
@@ -380,28 +356,14 @@ export default function App() {
       </div>
 
       {/* オクターブ選択 */}
-      <div style={{ marginBottom: '1rem' }}>
+      <div className="mb-4">
         <span>{t('octave')}: </span>
-        <div style={{
-          border: '1px solid #ccc',
-          borderRadius: '6px',
-          overflow: 'hidden',
-          display: 'inline-flex',
-          marginLeft: '0.5rem'
-        }}>
+        <div className="border border-gray-300 rounded-md overflow-hidden inline-flex ml-2">
           {[-2, -1, 0, 1, 2].map(oct => (
             <button
               key={oct}
               onClick={() => setOctave(oct)}
-              style={{
-                padding: '0.5rem 0.7rem',
-                backgroundColor: octave === oct ? 'var(--accent-color)' : 'transparent',
-                color: octave === oct ? '#fff' : '#000',
-                border: 'none',
-                borderRight: oct !== 2 ? '1px solid #ccc' : 'none',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
+              className={`px-3 py-2 ${octave === oct ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none ${oct !== 2 ? 'border-r border-gray-300' : ''} cursor-pointer transition-all duration-200 ease-in-out`}
             >
               {oct > 0 ? `+${oct}` : oct}
             </button>
@@ -410,28 +372,14 @@ export default function App() {
       </div>
 
       {/* 波形選択 */}
-      <div style={{ marginBottom: '1rem' }}>
+      <div className="mb-4">
         <span>{t('waveform')}: </span>
-        <div style={{
-          border: '1px solid #ccc',
-          borderRadius: '6px',
-          overflow: 'hidden',
-          display: 'inline-flex',
-          marginLeft: '0.5rem'
-        }}>
+        <div className="border border-gray-300 rounded-md overflow-hidden inline-flex ml-2">
           {waveforms.map((wave, index) => (
             <button
               key={wave}
               onClick={() => setWaveform(wave)}
-              style={{
-                padding: '0.5rem 0.7rem',
-                backgroundColor: waveform === wave ? 'var(--accent-color)' : 'transparent',
-                color: waveform === wave ? '#fff' : '#000',
-                border: 'none',
-                borderRight: index !== waveforms.length - 1 ? '1px solid #ccc' : 'none',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
+              className={`px-3 py-2 ${waveform === wave ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none ${index !== waveforms.length - 1 ? 'border-r border-gray-300' : ''} cursor-pointer transition-all duration-200 ease-in-out`}
             >
               {t(wave)}
             </button>
@@ -439,43 +387,20 @@ export default function App() {
         </div>
       </div>
 
-      <p style={{ fontSize: 'small' }}>平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
+      <p className="text-sm">平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{
-            display: 'flex',
-            flexGrow: 1,
-            border: '1px solid #ccc',
-            borderRadius: '6px',
-            overflow: 'hidden'
-          }}>
+      <div className="mb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-grow border border-gray-300 rounded-md overflow-hidden">
             <button
               onClick={() => setMode('equal')}
-              style={{
-                flex: 1,
-                padding: '0.5rem 1rem',
-                backgroundColor: mode === 'equal' ? 'var(--accent-color)' : 'transparent',
-                color: mode === 'equal' ? '#fff' : '#000',
-                border: 'none',
-                borderRight: '1px solid #ccc', // 区切り線を追加
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
+              className={`flex-1 px-4 py-2 ${mode === 'equal' ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none border-r border-gray-300 cursor-pointer transition-all duration-200 ease-in-out`}
             >
               {t('equalTemperament')}
             </button>
             <button
               onClick={() => setMode('just')}
-              style={{
-                flex: 1,
-                padding: '0.5rem 1rem',
-                backgroundColor: mode === 'just' ? 'var(--accent-color)' : 'transparent',
-                color: mode === 'just' ? '#fff' : '#000',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
+              className={`flex-1 px-4 py-2 ${mode === 'just' ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none cursor-pointer transition-all duration-200 ease-in-out`}
             >
               {t('justIntonation')}
             </button>
@@ -484,30 +409,14 @@ export default function App() {
       </div>
 
       {/* 各和音（根音・第3音・第5音）のトグルボタン */}
-      <div style={{ marginBottom: '1rem' }}>
+      <div className="mb-4">
         <div
-          style={{
-            display: 'flex',
-            height: '120px',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            overflow: 'hidden',
-            touchAction: 'none' // タッチイベントをブラウザの標準動作から切り離す
-          }}
+          className="flex h-32 border border-gray-300 rounded overflow-hidden touch-none"
         >
           {chordNoteNames.map((note, index) => (
             <div
               key={index}
-              style={{
-                flex: 1,
-                backgroundColor: playingNotes[index] ? '#f44336' : '#e0e0e0',
-                color: playingNotes[index] ? '#fff' : '#000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                userSelect: 'none',
-                position: 'relative'
-              }}
+              className={`flex-1 ${playingNotes[index] ? 'bg-red-500 text-white' : 'bg-gray-200 text-black'} flex items-center justify-center select-none relative`}
               onPointerDown={(e) => {
                 // モバイルの場合はonTouchStartで処理するため、ポインターイベントを無視
                 if (e.pointerType === 'touch') return;
@@ -580,9 +489,9 @@ export default function App() {
               }}
               data-note-index={index}
             >
-              <div style={{ textAlign: 'center' }}>
+              <div className="text-center">
                 <div>{index === 0 ? t('rootText') : index === 1 ? t('thirdText') : t('fifthText')}</div>
-                <div style={{ fontSize: 'larger' }}>{note}</div>
+                <div className="text-lg">{note}</div>
               </div>
             </div>
           ))}
