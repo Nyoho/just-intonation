@@ -69,7 +69,7 @@ export default function App() {
     // 少し遅延させてダイアログを表示（レンダリング完了後に実行するため）
     const timer = setTimeout(() => {
       if (startDialogRef.current && !audioInitialized) {
-        startDialogRef.current.show();
+        startDialogRef.current.showModal();
       }
     }, 100);
 
