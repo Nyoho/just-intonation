@@ -289,7 +289,7 @@ export default function App() {
       <dialog
         ref={startDialogRef}
         onClick={initAudioContext}
-        className="p-8 rounded-lg border border-gray-300 shadow-md text-center w-4/5 max-w-md cursor-pointer"
+        className="m-auto p-8 rounded-lg border border-gray-300 shadow-md text-center w-4/5 max-w-md cursor-pointer"
       >
         <h2>{t('title')}</h2>
         <p>{t('startPrompt')}</p>
