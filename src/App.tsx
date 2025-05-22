@@ -284,7 +284,7 @@ export default function App() {
   }, [aFrequency, selectedPitch, chordType, mode, octave, waveform])
 
   return (
-    <div className="p-4 mx-auto max-w-3xl">
+    <div className="p-4 mx-auto max-w-3xl bg-white dark:bg-gray-800">
       {/* タップトゥースタートのダイアログ */}
       <dialog
         ref={startDialogRef}
