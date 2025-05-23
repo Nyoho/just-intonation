@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import LcdScreen from './components/LcdScreen';
 
 const pitchClasses = [
   { label: 'C', offset: -9 },
@@ -284,217 +285,230 @@ export default function App() {
   }, [aFrequency, selectedPitch, chordType, mode, octave, waveform])
 
   return (
-    <div className="p-4 mx-auto max-w-3xl bg-white dark:bg-gray-800">
-      {/* タップトゥースタートのダイアログ */}
-      <dialog
-        ref={startDialogRef}
-        onClick={initAudioContext}
-        className="m-auto p-8 rounded-lg border border-gray-300 shadow-md text-center w-4/5 max-w-md cursor-pointer"
+    <div className="flex justify-center items-center min-h-screen bg-[#1a1a1a] p-5 box-border font-sans">
+      <div
+        className="rounded-xl p-6 w-full max-w-md"
+        style={{
+          color: '#ddd',
+          backgroundImage: 'linear-gradient(145deg, #4a4a4a, #2c2c2c)',
+          boxShadow: '0 15px 25px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.05), inset 0 -2px 4px rgba(0,0,0,0.5)',
+          border: '1px solid #555',
+          borderTopColor: '#666'
+        }}
       >
-        <h2>{t('title')}</h2>
-        <p>{t('startPrompt')}</p>
-        <button
-          onClick={(e) => {
-            e.stopPropagation(); // ダイアログのクリックイベントとの重複を防止
-            initAudioContext();
-          }}
-          className="bg-accent text-black px-8 py-4 rounded border-none text-xl mt-4 cursor-pointer"
+        {/* タップトゥースタートのダイアログ */}
+        <dialog
+          ref={startDialogRef}
+          onClick={initAudioContext}
+          className="m-auto p-8 rounded-lg border border-gray-300 shadow-md text-center w-4/5 max-w-md cursor-pointer"
         >
-          {t('startButton')}
-        </button>
-      </dialog>
-
-      <h1>{t('title')}</h1>
-      <div className="mb-4">
-        <label>
-          {t('aFrequency')}:
-          <input
-            type="number"
-            value={aFrequency}
-            onChange={e => setAFrequency(Number(e.target.value))}
-            className="ml-2"
-          />
-        </label>
-      </div>
-
-      {/* 根音選択：12音ピアノ風の横並びボタン */}
-      <div className="mb-4">
-        <span>{t('rootNote')}: </span>
-        {pitchClasses.map(p => (
+          <h2>{t('title')}</h2>
+          <p>{t('startPrompt')}</p>
           <button
-            key={p.label}
-            onClick={() => setSelectedPitch(p.label)}
-            className={`m-1 px-2 py-1 border border-gray-300 ${selectedPitch === p.label ? 'bg-accent text-white' : 'bg-gray-200 text-black'}`}
+            onClick={(e) => {
+              e.stopPropagation(); // ダイアログのクリックイベントとの重複を防止
+              initAudioContext();
+            }}
+            className="bg-accent text-black px-8 py-4 rounded border-none text-xl mt-4 cursor-pointer"
           >
-            {p.label}
+            {t('startButton')}
           </button>
-        ))}
-      </div>
+        </dialog>
 
-      <div className="mb-4">
-        <span>{t('chordType')}: </span>
-        <label className="ml-2">
-          <input
-            type="radio"
-            name="chordType"
-            value="major"
-            checked={chordType === 'major'}
-            onChange={() => setChordType('major')}
-          />
-          {t('majorChord')}
-        </label>
-        <label className="ml-2">
-          <input
-            type="radio"
-            name="chordType"
-            value="minor"
-            checked={chordType === 'minor'}
-            onChange={() => setChordType('minor')}
-          />
-          {t('minorChord')}
-        </label>
-      </div>
+        <LcdScreen displayText={`${selectedPitch} ${chordType} / ${mode} / A4 = ${aFrequency} Hz`} />
 
-      {/* オクターブ選択 */}
-      <div className="mb-4">
-        <span>{t('octave')}: </span>
-        <div className="border border-gray-300 rounded-md overflow-hidden inline-flex ml-2">
-          {[-2, -1, 0, 1, 2].map(oct => (
+        <h1>{t('title')}</h1>
+        <div className="mb-4">
+          <label>
+            {t('aFrequency')}:
+            <input
+              type="number"
+              value={aFrequency}
+              onChange={e => setAFrequency(Number(e.target.value))}
+              className="ml-2"
+            />
+          </label>
+        </div>
+
+        {/* 根音選択：12音ピアノ風の横並びボタン */}
+        <div className="mb-4">
+          <span>{t('rootNote')}: </span>
+          {pitchClasses.map(p => (
             <button
-              key={oct}
-              onClick={() => setOctave(oct)}
-              className={`px-3 py-2 ${octave === oct ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none ${oct !== 2 ? 'border-r border-gray-300' : ''} cursor-pointer transition-all duration-200 ease-in-out`}
+              key={p.label}
+              onClick={() => setSelectedPitch(p.label)}
+              className={`m-1 px-2 py-1 border border-gray-300 ${selectedPitch === p.label ? 'bg-accent text-white' : 'bg-gray-200 text-black'}`}
             >
-              {oct > 0 ? `+${oct}` : oct}
+              {p.label}
             </button>
           ))}
         </div>
-      </div>
 
-      {/* 波形選択 */}
-      <div className="mb-4">
-        <span>{t('waveform')}: </span>
-        <div className="border border-gray-300 rounded-md overflow-hidden inline-flex ml-2">
-          {waveforms.map((wave, index) => (
-            <button
-              key={wave}
-              onClick={() => setWaveform(wave)}
-              className={`px-3 py-2 ${waveform === wave ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none ${index !== waveforms.length - 1 ? 'border-r border-gray-300' : ''} cursor-pointer transition-all duration-200 ease-in-out`}
-            >
-              {t(wave)}
-            </button>
-          ))}
+        <div className="mb-4">
+          <span>{t('chordType')}: </span>
+          <label className="ml-2">
+            <input
+              type="radio"
+              name="chordType"
+              value="major"
+              checked={chordType === 'major'}
+              onChange={() => setChordType('major')}
+            />
+            {t('majorChord')}
+          </label>
+          <label className="ml-2">
+            <input
+              type="radio"
+              name="chordType"
+              value="minor"
+              checked={chordType === 'minor'}
+              onChange={() => setChordType('minor')}
+            />
+            {t('minorChord')}
+          </label>
         </div>
-      </div>
 
-      <p className="text-sm">平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
-
-      <div className="mb-4">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-grow border border-gray-300 rounded-md overflow-hidden">
-            <button
-              onClick={() => setMode('equal')}
-              className={`flex-1 px-4 py-2 ${mode === 'equal' ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none border-r border-gray-300 cursor-pointer transition-all duration-200 ease-in-out`}
-            >
-              {t('equalTemperament')}
-            </button>
-            <button
-              onClick={() => setMode('just')}
-              className={`flex-1 px-4 py-2 ${mode === 'just' ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none cursor-pointer transition-all duration-200 ease-in-out`}
-            >
-              {t('justIntonation')}
-            </button>
+        {/* オクターブ選択 */}
+        <div className="mb-4">
+          <span>{t('octave')}: </span>
+          <div className="border border-gray-300 rounded-md overflow-hidden inline-flex ml-2">
+            {[-2, -1, 0, 1, 2].map(oct => (
+              <button
+                key={oct}
+                onClick={() => setOctave(oct)}
+                className={`px-3 py-2 ${octave === oct ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none ${oct !== 2 ? 'border-r border-gray-300' : ''} cursor-pointer transition-all duration-200 ease-in-out`}
+              >
+                {oct > 0 ? `+${oct}` : oct}
+              </button>
+            ))}
           </div>
         </div>
-      </div>
 
-      {/* 各和音（根音・第3音・第5音）のトグルボタン */}
-      <div className="mb-4">
-        <div
-          className="flex h-32 border border-gray-300 rounded overflow-hidden touch-none"
-        >
-          {chordNoteNames.map((note, index) => (
-            <div
-              key={index}
-              className={`flex-1 ${playingNotes[index] ? 'bg-red-500 text-white' : 'bg-gray-200 text-black'} flex items-center justify-center select-none relative`}
-              onPointerDown={(e) => {
-                // モバイルの場合はonTouchStartで処理するため、ポインターイベントを無視
-                if (e.pointerType === 'touch') return;
+        {/* 波形選択 */}
+        <div className="mb-4">
+          <span>{t('waveform')}: </span>
+          <div className="border border-gray-300 rounded-md overflow-hidden inline-flex ml-2">
+            {waveforms.map((wave, index) => (
+              <button
+                key={wave}
+                onClick={() => setWaveform(wave)}
+                className={`px-3 py-2 ${waveform === wave ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none ${index !== waveforms.length - 1 ? 'border-r border-gray-300' : ''} cursor-pointer transition-all duration-200 ease-in-out`}
+              >
+                {t(wave)}
+              </button>
+            ))}
+          </div>
+        </div>
 
-                e.preventDefault();
-                initAudioContext();
-                toggleChordNote(index);
-                lastTouchedNoteRef.current = index;
-              }}
-              onPointerEnter={(e) => {
-                // モバイルの場合はonTouchMoveで処理するため、ポインターイベントを無視
-                if (e.pointerType === 'touch') return;
+        <p className="text-sm">平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
 
-                // ポインターが押されている状態でエリアに入ってきた場合のみtoggle
-                if (e.buttons > 0 && lastTouchedNoteRef.current !== index) {
+        <div className="mb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-grow border border-gray-300 rounded-md overflow-hidden">
+              <button
+                onClick={() => setMode('equal')}
+                className={`flex-1 px-4 py-2 ${mode === 'equal' ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none border-r border-gray-300 cursor-pointer transition-all duration-200 ease-in-out`}
+              >
+                {t('equalTemperament')}
+              </button>
+              <button
+                onClick={() => setMode('just')}
+                className={`flex-1 px-4 py-2 ${mode === 'just' ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none cursor-pointer transition-all duration-200 ease-in-out`}
+              >
+                {t('justIntonation')}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 各和音（根音・第3音・第5音）のトグルボタン */}
+        <div className="mb-4">
+          <div
+            className="flex h-32 border border-gray-300 rounded overflow-hidden touch-none"
+          >
+            {chordNoteNames.map((note, index) => (
+              <div
+                key={index}
+                className={`flex-1 ${playingNotes[index] ? 'bg-red-500 text-white' : 'bg-gray-200 text-black'} flex items-center justify-center select-none relative`}
+                onPointerDown={(e) => {
+                  // モバイルの場合はonTouchStartで処理するため、ポインターイベントを無視
+                  if (e.pointerType === 'touch') return;
+
                   e.preventDefault();
+                  initAudioContext();
                   toggleChordNote(index);
                   lastTouchedNoteRef.current = index;
-                }
-              }}
-              onTouchStart={(e) => {
-                e.preventDefault();
-                // タッチ時にAudioContextを直接初期化
-                initAudioContext();
-                toggleChordNote(index);
-                lastTouchedNoteRef.current = index;
-              }}
-              onTouchMove={(e) => {
-                // タッチ移動時のイベント処理
-                e.preventDefault();
+                }}
+                onPointerEnter={(e) => {
+                  // モバイルの場合はonTouchMoveで処理するため、ポインターイベントを無視
+                  if (e.pointerType === 'touch') return;
 
-                try {
-                  // タッチ位置から要素を取得
-                  const touch = e.touches[0];
-                  if (!touch) return; // タッチが存在しない場合は何もしない
-
-                  const element = document.elementFromPoint(touch.clientX, touch.clientY);
-
-                  // 要素が見つからない場合は何もしない
-                  if (!element) return;
-
-                  // 要素がこの音のセルを表す場合は何もしない（既にポインターダウンで処理済み）
-                  if (element === e.currentTarget) return;
-
-                  // 親要素を確認して別の音のセルに移動したかどうかを判定
-                  const parentElements = chordNoteNames.map((_, i) => {
-                    return document.querySelector(`[data-note-index="${i}"]`);
-                  });
-
-                  // どの音のセルに移動したか判定
-                  for (let i = 0; i < parentElements.length; i++) {
-                    if (parentElements && parentElements[i] && // null チェックを追加
-                      (element === parentElements[i] || parentElements[i]?.contains(element)) &&
-                      i !== lastTouchedNoteRef.current) {
-                      // 別の音のセルに移動した場合、その音をトグル
-                      toggleChordNote(i);
-                      lastTouchedNoteRef.current = i;
-                      break;
-                    }
+                  // ポインターが押されている状態でエリアに入ってきた場合のみtoggle
+                  if (e.buttons > 0 && lastTouchedNoteRef.current !== index) {
+                    e.preventDefault();
+                    toggleChordNote(index);
+                    lastTouchedNoteRef.current = index;
                   }
-                } catch (error) {
-                  console.error('タッチ処理中にエラーが発生しました:', error);
-                }
-              }}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-              }}
-              onTouchCancel={(e) => {
-                e.preventDefault();
-              }}
-              data-note-index={index}
-            >
-              <div className="text-center">
-                <div>{index === 0 ? t('rootText') : index === 1 ? t('thirdText') : t('fifthText')}</div>
-                <div className="text-lg">{note}</div>
+                }}
+                onTouchStart={(e) => {
+                  e.preventDefault();
+                  // タッチ時にAudioContextを直接初期化
+                  initAudioContext();
+                  toggleChordNote(index);
+                  lastTouchedNoteRef.current = index;
+                }}
+                onTouchMove={(e) => {
+                  // タッチ移動時のイベント処理
+                  e.preventDefault();
+
+                  try {
+                    // タッチ位置から要素を取得
+                    const touch = e.touches[0];
+                    if (!touch) return; // タッチが存在しない場合は何もしない
+
+                    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+
+                    // 要素が見つからない場合は何もしない
+                    if (!element) return;
+
+                    // 要素がこの音のセルを表す場合は何もしない（既にポインターダウンで処理済み）
+                    if (element === e.currentTarget) return;
+
+                    // 親要素を確認して別の音のセルに移動したかどうかを判定
+                    const parentElements = chordNoteNames.map((_, i) => {
+                      return document.querySelector(`[data-note-index="${i}"]`);
+                    });
+
+                    // どの音のセルに移動したか判定
+                    for (let i = 0; i < parentElements.length; i++) {
+                      if (parentElements && parentElements[i] && // null チェックを追加
+                        (element === parentElements[i] || parentElements[i]?.contains(element)) &&
+                        i !== lastTouchedNoteRef.current) {
+                        // 別の音のセルに移動した場合、その音をトグル
+                        toggleChordNote(i);
+                        lastTouchedNoteRef.current = i;
+                        break;
+                      }
+                    }
+                  } catch (error) {
+                    console.error('タッチ処理中にエラーが発生しました:', error);
+                  }
+                }}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                }}
+                onTouchCancel={(e) => {
+                  e.preventDefault();
+                }}
+                data-note-index={index}
+              >
+                <div className="text-center">
+                  <div>{index === 0 ? t('rootText') : index === 1 ? t('thirdText') : t('fifthText')}</div>
+                  <div className="text-lg">{note}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>
