@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import LcdScreen from './components/LcdScreen';
+import NumericStepper from './components/NumericStepper';
 
 const pitchClasses = [
   { label: 'C', offset: -9 },
@@ -371,17 +372,14 @@ export default function App() {
         {/* オクターブ選択 */}
         <div className="mb-4">
           <span>{t('octave')}: </span>
-          <div className="border border-gray-300 rounded-md overflow-hidden inline-flex ml-2">
-            {[-2, -1, 0, 1, 2].map(oct => (
-              <button
-                key={oct}
-                onClick={() => setOctave(oct)}
-                className={`px-3 py-2 ${octave === oct ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none ${oct !== 2 ? 'border-r border-gray-300' : ''} cursor-pointer transition-all duration-200 ease-in-out`}
-              >
-                {oct > 0 ? `+${oct}` : oct}
-              </button>
-            ))}
-          </div>
+          <NumericStepper
+            value={octave}
+            onValueChange={setOctave}
+            min={-2}
+            max={2}
+            label="OCTAVE (+/-)"
+            showSign={true}
+          />
         </div>
 
         {/* 波形選択 */}

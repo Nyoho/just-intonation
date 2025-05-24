@@ -1,0 +1,55 @@
+interface NumericStepperProps {
+  value: number;
+  onValueChange: (value: number) => void;
+  min?: number;
+  max?: number;
+  label?: string;
+  showSign?: boolean;
+}
+
+const NumericStepper = ({ 
+  value, 
+  onValueChange, 
+  min = -2, 
+  max = 2, 
+  label,
+  showSign = true 
+}: NumericStepperProps) => {
+  const handleDecrement = () => {
+    if (value > min) onValueChange(value - 1);
+  };
+  const handleIncrement = () => {
+    if (value < max) onValueChange(value + 1);
+  };
+
+  const displayValue = showSign && value > 0 ? `+${value}` : value;
+
+  return (
+    <div className="col-span-2 flex flex-col items-center">
+      {label && (
+        <p className="text-[#a0a0a0] text-xs -mb-1 [text-shadow:0_1px_1px_rgba(0,0,0,0.5)]">
+          {label}
+        </p>
+      )}
+      <div className="w-full flex items-center justify-between rounded-md overflow-hidden border border-solid border-[#6a6a6a]" style={{ height: '50px', background: 'linear-gradient(145deg, #484848, #303030)', boxShadow: '0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1), inset 0 -1px 1px rgba(0,0,0,0.2)' }}>
+        <button 
+          onClick={handleDecrement} 
+          disabled={value === min} 
+          className="h-full px-4 font-bold text-lg text-white/80 disabled:opacity-30 hover:bg-white/10 transition-colors"
+        >
+          -
+        </button>
+        <div className="font-bold text-lg text-white">{displayValue}</div>
+        <button 
+          onClick={handleIncrement} 
+          disabled={value === max} 
+          className="h-full px-4 font-bold text-lg text-white/80 disabled:opacity-30 hover:bg-white/10 transition-colors"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default NumericStepper;
