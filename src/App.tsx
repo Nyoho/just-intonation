@@ -319,17 +319,14 @@ export default function App() {
         <LcdScreen displayText={`${selectedPitch} ${chordType} / ${mode} / A4 = ${aFrequency} Hz`} />
 
         <h1>{t('title')}</h1>
-        <div className="mb-4">
-          <label>
-            {t('aFrequency')}:
-            <input
-              type="number"
-              value={aFrequency}
-              onChange={e => setAFrequency(Number(e.target.value))}
-              className="ml-2"
-            />
-          </label>
-        </div>
+        <NumericStepper
+          value={aFrequency}
+          onValueChange={setAFrequency}
+          min={437}
+          max={444}
+          label={t('aFrequency')}
+          showSign={false}
+        />
 
         {/* 根音選択：12音ピアノ風の横並びボタン */}
         <div className="mb-4">
