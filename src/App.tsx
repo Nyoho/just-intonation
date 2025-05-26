@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import LcdScreen from './components/LcdScreen';
 import NumericStepper from './components/NumericStepper';
+import SegmentedControl from './components/SegmentedControl';
 
 const pitchClasses = [
   { label: 'C', offset: -9 },
@@ -397,24 +398,15 @@ export default function App() {
 
         <p className="text-sm">平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
 
-        <div className="mb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-grow border border-gray-300 rounded-md overflow-hidden">
-              <button
-                onClick={() => setMode('equal')}
-                className={`flex-1 px-4 py-2 ${mode === 'equal' ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none border-r border-gray-300 cursor-pointer transition-all duration-200 ease-in-out`}
-              >
-                {t('equalTemperament')}
-              </button>
-              <button
-                onClick={() => setMode('just')}
-                className={`flex-1 px-4 py-2 ${mode === 'just' ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none cursor-pointer transition-all duration-200 ease-in-out`}
-              >
-                {t('justIntonation')}
-              </button>
-            </div>
-          </div>
-        </div>
+        <SegmentedControl
+          options={[
+            { value: 'equal', label: t('equalTemperament') },
+            { value: 'just', label: t('justIntonation') }
+          ]}
+          selectedValue={mode}
+          onValueChange={setMode}
+          label="調律"
+        />
 
         {/* 各和音（根音・第3音・第5音）のトグルボタン */}
         <div className="mb-4">
@@ -506,6 +498,6 @@ export default function App() {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
