@@ -369,31 +369,27 @@ export default function App() {
 
         {/* オクターブ選択 */}
         <div className="mb-4">
-          <span>{t('octave')}: </span>
           <NumericStepper
             value={octave}
             onValueChange={setOctave}
             min={-2}
             max={2}
-            label="OCTAVE (+/-)"
+            label={t('octave')}
             showSign={true}
           />
         </div>
 
         {/* 波形選択 */}
         <div className="mb-4">
-          <span>{t('waveform')}: </span>
-          <div className="border border-gray-300 rounded-md overflow-hidden inline-flex ml-2">
-            {waveforms.map((wave, index) => (
-              <button
-                key={wave}
-                onClick={() => setWaveform(wave)}
-                className={`px-3 py-2 ${waveform === wave ? 'bg-accent text-white' : 'bg-transparent text-black'} border-none ${index !== waveforms.length - 1 ? 'border-r border-gray-300' : ''} cursor-pointer transition-all duration-200 ease-in-out`}
-              >
-                {t(wave)}
-              </button>
-            ))}
-          </div>
+          <SegmentedControl
+            options={waveforms.map(wave => ({
+              value: wave,
+              label: t(wave)
+            }))}
+            selectedValue={waveform}
+            onValueChange={(value) => setWaveform(value as OscillatorType)}
+            label={t('waveform')}
+          />
         </div>
 
         <p className="text-sm">平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
@@ -404,7 +400,7 @@ export default function App() {
             { value: 'just', label: t('justIntonation') }
           ]}
           selectedValue={mode}
-          onValueChange={setMode}
+          onValueChange={(value) => setMode(value as 'equal' | 'just')}
           label="調律"
         />
 
