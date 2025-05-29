@@ -344,27 +344,18 @@ export default function App() {
         </div>
 
         <div className="mb-4">
-          <span>{t('chordType')}: </span>
-          <label className="ml-2">
-            <input
-              type="radio"
-              name="chordType"
-              value="major"
-              checked={chordType === 'major'}
-              onChange={() => setChordType('major')}
-            />
-            {t('majorChord')}
-          </label>
-          <label className="ml-2">
-            <input
-              type="radio"
-              name="chordType"
-              value="minor"
-              checked={chordType === 'minor'}
-              onChange={() => setChordType('minor')}
-            />
-            {t('minorChord')}
-          </label>
+          <SegmentedControl
+            options={[{
+              value: 'major',
+              label: t('majorChord'),
+            }, {
+              value: 'minor',
+              label: t('minorChord'),
+            }]}
+            selectedValue={chordType}
+            onValueChange={(value) => setChordType(value as 'major' | 'minor')}
+            label={t('chordType')}
+          />
         </div>
 
         {/* オクターブ選択 */}
