@@ -329,18 +329,18 @@ export default function App() {
           showSign={false}
         />
 
-        {/* 根音選択：12音ピアノ風の横並びボタン */}
+        {/* 根音選択 */}
         <div className="mb-4">
-          <span>{t('rootNote')}: </span>
-          {pitchClasses.map(p => (
-            <button
-              key={p.label}
-              onClick={() => setSelectedPitch(p.label)}
-              className={`m-1 px-2 py-1 border border-gray-300 ${selectedPitch === p.label ? 'bg-accent text-white' : 'bg-gray-200 text-black'}`}
-            >
-              {p.label}
-            </button>
-          ))}
+          <SegmentedControl
+            options={pitchClasses.map(pitch => ({
+              value: pitch.label,
+              label: pitch.label
+            }))}
+            selectedValue={selectedPitch}
+            onValueChange={(value) => setSelectedPitch(value as string)}
+            label={t('rootNote')}
+            columns={6}
+          />
         </div>
 
         <div className="mb-4">
