@@ -398,90 +398,92 @@ export default function App() {
         {/* 各和音（根音・第3音・第5音）のトグルボタン */}
         <div className="mb-4">
           <div
-            className="flex h-32 border border-gray-300 rounded overflow-hidden touch-none"
+            className="col-span-4 flex flex-col items-center"
           >
-            {chordNoteNames.map((note, index) => (
-              <div
-                key={index}
-                className={`flex-1 ${playingNotes[index] ? 'bg-red-500 text-white' : 'bg-gray-200 text-black'} flex items-center justify-center select-none relative`}
-                onPointerDown={(e) => {
-                  // モバイルの場合はonTouchStartで処理するため、ポインターイベントを無視
-                  if (e.pointerType === 'touch') return;
+            <div className="w-full flex rounded-md overflow-hidden border border-solid border-[#6a6a6a]" style={{ boxShadow: '0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1), inset 0 -1px 1px rgba(0,0,0,0.2)' }}>
+              {chordNoteNames.map((note, index) => (
+                <div
+                  key={index}
+                  className={`flex-1 py-3 text-center font-bold cursor-pointer min-h-[100px] flex justify-center items-center select-none ${playingNotes[index] ? 'bg-pink-500 text-black' : ''} `}
+                  onPointerDown={(e) => {
+                    // モバイルの場合はonTouchStartで処理するため、ポインターイベントを無視
+                    if (e.pointerType === 'touch') return;
 
-                  e.preventDefault();
-                  initAudioContext();
-                  toggleChordNote(index);
-                  lastTouchedNoteRef.current = index;
-                }}
-                onPointerEnter={(e) => {
-                  // モバイルの場合はonTouchMoveで処理するため、ポインターイベントを無視
-                  if (e.pointerType === 'touch') return;
-
-                  // ポインターが押されている状態でエリアに入ってきた場合のみtoggle
-                  if (e.buttons > 0 && lastTouchedNoteRef.current !== index) {
                     e.preventDefault();
+                    initAudioContext();
                     toggleChordNote(index);
                     lastTouchedNoteRef.current = index;
-                  }
-                }}
-                onTouchStart={(e) => {
-                  e.preventDefault();
-                  // タッチ時にAudioContextを直接初期化
-                  initAudioContext();
-                  toggleChordNote(index);
-                  lastTouchedNoteRef.current = index;
-                }}
-                onTouchMove={(e) => {
-                  // タッチ移動時のイベント処理
-                  e.preventDefault();
+                  }}
+                  onPointerEnter={(e) => {
+                    // モバイルの場合はonTouchMoveで処理するため、ポインターイベントを無視
+                    if (e.pointerType === 'touch') return;
 
-                  try {
-                    // タッチ位置から要素を取得
-                    const touch = e.touches[0];
-                    if (!touch) return; // タッチが存在しない場合は何もしない
-
-                    const element = document.elementFromPoint(touch.clientX, touch.clientY);
-
-                    // 要素が見つからない場合は何もしない
-                    if (!element) return;
-
-                    // 要素がこの音のセルを表す場合は何もしない（既にポインターダウンで処理済み）
-                    if (element === e.currentTarget) return;
-
-                    // 親要素を確認して別の音のセルに移動したかどうかを判定
-                    const parentElements = chordNoteNames.map((_, i) => {
-                      return document.querySelector(`[data-note-index="${i}"]`);
-                    });
-
-                    // どの音のセルに移動したか判定
-                    for (let i = 0; i < parentElements.length; i++) {
-                      if (parentElements && parentElements[i] && // null チェックを追加
-                        (element === parentElements[i] || parentElements[i]?.contains(element)) &&
-                        i !== lastTouchedNoteRef.current) {
-                        // 別の音のセルに移動した場合、その音をトグル
-                        toggleChordNote(i);
-                        lastTouchedNoteRef.current = i;
-                        break;
-                      }
+                    // ポインターが押されている状態でエリアに入ってきた場合のみtoggle
+                    if (e.buttons > 0 && lastTouchedNoteRef.current !== index) {
+                      e.preventDefault();
+                      toggleChordNote(index);
+                      lastTouchedNoteRef.current = index;
                     }
-                  } catch (error) {
-                    console.error('タッチ処理中にエラーが発生しました:', error);
-                  }
-                }}
-                onTouchEnd={(e) => {
-                  e.preventDefault();
-                }}
-                onTouchCancel={(e) => {
-                  e.preventDefault();
-                }}
-                data-note-index={index}
-              >
-                <div className="text-center">
-                  <div>{index === 0 ? t('rootText') : index === 1 ? t('thirdText') : t('fifthText')}</div>
-                  <div className="text-lg">{note}</div>
+                  }}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    // タッチ時にAudioContextを直接初期化
+                    initAudioContext();
+                    toggleChordNote(index);
+                    lastTouchedNoteRef.current = index;
+                  }}
+                  onTouchMove={(e) => {
+                    // タッチ移動時のイベント処理
+                    e.preventDefault();
+
+                    try {
+                      // タッチ位置から要素を取得
+                      const touch = e.touches[0];
+                      if (!touch) return; // タッチが存在しない場合は何もしない
+
+                      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+
+                      // 要素が見つからない場合は何もしない
+                      if (!element) return;
+
+                      // 要素がこの音のセルを表す場合は何もしない（既にポインターダウンで処理済み）
+                      if (element === e.currentTarget) return;
+
+                      // 親要素を確認して別の音のセルに移動したかどうかを判定
+                      const parentElements = chordNoteNames.map((_, i) => {
+                        return document.querySelector(`[data-note-index="${i}"]`);
+                      });
+
+                      // どの音のセルに移動したか判定
+                      for (let i = 0; i < parentElements.length; i++) {
+                        if (parentElements && parentElements[i] && // null チェックを追加
+                          (element === parentElements[i] || parentElements[i]?.contains(element)) &&
+                          i !== lastTouchedNoteRef.current) {
+                          // 別の音のセルに移動した場合、その音をトグル
+                          toggleChordNote(i);
+                          lastTouchedNoteRef.current = i;
+                          break;
+                        }
+                      }
+                    } catch (error) {
+                      console.error('タッチ処理中にエラーが発生しました:', error);
+                    }
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                  }}
+                  onTouchCancel={(e) => {
+                    e.preventDefault();
+                  }}
+                  data-note-index={index}
+                >
+                  <div className="text-center">
+                    <div>{index === 0 ? t('rootText') : index === 1 ? t('thirdText') : t('fifthText')}</div>
+                    <div className="text-lg">{note}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
