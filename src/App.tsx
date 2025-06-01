@@ -383,8 +383,6 @@ export default function App() {
           />
         </div>
 
-        <p className="text-sm">平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
-
         <SegmentedControl
           options={[
             { value: 'equal', label: t('equalTemperament') },
@@ -394,6 +392,8 @@ export default function App() {
           onValueChange={(value) => setMode(value as 'equal' | 'just')}
           label="調律"
         />
+
+        <p className="text-sm">平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
 
         {/* 各和音（根音・第3音・第5音）のトグルボタン */}
         <div className="mb-4">
