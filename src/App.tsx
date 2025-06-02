@@ -320,14 +320,36 @@ export default function App() {
         <LcdScreen displayText={`${selectedPitch} ${chordType} / ${mode} / A4 = ${aFrequency} Hz`} />
 
         <h1>{t('title')}</h1>
-        <NumericStepper
-          value={aFrequency}
-          onValueChange={setAFrequency}
-          min={437}
-          max={444}
-          label={t('aFrequency')}
-          showSign={false}
-        />
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          <NumericStepper
+            value={aFrequency}
+            onValueChange={setAFrequency}
+            min={437}
+            max={444}
+            label={t('aFrequency')}
+            showSign={false}
+          />
+          <NumericStepper
+            value={octave}
+            onValueChange={setOctave}
+            min={-2}
+            max={2}
+            label={t('octave')}
+            showSign={true}
+          />
+          <SegmentedControl
+            options={[{
+              value: 'major',
+              label: t('majorChord'),
+            }, {
+              value: 'minor',
+              label: t('minorChord'),
+            }]}
+            selectedValue={chordType}
+            onValueChange={(value) => setChordType(value as 'major' | 'minor')}
+            label={t('chordType')}
+          />
+        </div>
 
         {/* 根音選択 */}
         <div className="mb-4">
@@ -344,30 +366,6 @@ export default function App() {
         </div>
 
         <div className="mb-4">
-          <SegmentedControl
-            options={[{
-              value: 'major',
-              label: t('majorChord'),
-            }, {
-              value: 'minor',
-              label: t('minorChord'),
-            }]}
-            selectedValue={chordType}
-            onValueChange={(value) => setChordType(value as 'major' | 'minor')}
-            label={t('chordType')}
-          />
-        </div>
-
-        {/* オクターブ選択 */}
-        <div className="mb-4">
-          <NumericStepper
-            value={octave}
-            onValueChange={setOctave}
-            min={-2}
-            max={2}
-            label={t('octave')}
-            showSign={true}
-          />
         </div>
 
         {/* 波形選択 */}
