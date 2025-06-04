@@ -287,9 +287,9 @@ export default function App() {
   }, [aFrequency, selectedPitch, chordType, mode, octave, waveform])
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#1a1a1a] p-5 box-border font-sans">
+    <div className="flex justify-center items-center min-h-screen bg-[#1a1a1a] box-border font-sans">
       <div
-        className="rounded-xl p-6 w-full max-w-md"
+        className="rounded-xl p-4 w-full max-w-md"
         style={{
           color: '#ddd',
           backgroundImage: 'linear-gradient(145deg, #4a4a4a, #2c2c2c)',
@@ -317,9 +317,9 @@ export default function App() {
           </button>
         </dialog>
 
+        <h1 className="text-right">{t('title')}</h1>
         <LcdScreen displayText={`${selectedPitch} ${chordType} / ${mode} / A4 = ${aFrequency} Hz`} />
 
-        <h1>{t('title')}</h1>
         <div className="grid grid-cols-3 gap-4 mb-4">
           <NumericStepper
             value={aFrequency}
