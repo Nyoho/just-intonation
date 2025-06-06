@@ -289,7 +289,7 @@ export default function App() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#1a1a1a] box-border font-sans">
       <div
-        className="rounded-xl p-4 w-full max-w-md"
+        className="rounded-xl px-4 w-full max-w-md"
         style={{
           color: '#ddd',
           backgroundImage: 'linear-gradient(145deg, #4a4a4a, #2c2c2c)',
@@ -318,7 +318,7 @@ export default function App() {
           </button>
         </dialog>
 
-        <h1 className="text-right">{t('title')}</h1>
+        <h1 className="text-right py-1">{t('title')}</h1>
         <LcdScreen displayText={`${selectedPitch} ${chordType} / ${mode} / A4 = ${aFrequency} Hz`} />
 
         <div className="grid grid-cols-3 gap-4 mb-4">
