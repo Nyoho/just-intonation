@@ -63,21 +63,8 @@ export default function App() {
   // 最後にタッチした音のインデックスを追跡
   const lastTouchedNoteRef = useRef<number | null>(null)
   // オーディオコンテキストが初期化されたかどうかのフラグ
-  const [audioInitialized, setAudioInitialized] = useState(false)
-  // ダイアログのrefを追加
-  const startDialogRef = useRef<HTMLDialogElement>(null)
+  const audioInitializedRef = useRef(false)
 
-  // コンポーネントマウント時にダイアログを表示
-  useEffect(() => {
-    // 少し遅延させてダイアログを表示（レンダリング完了後に実行するため）
-    const timer = setTimeout(() => {
-      if (startDialogRef.current && !audioInitialized) {
-        startDialogRef.current.showModal();
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   // 設定変更時にローカルストレージに保存
   useEffect(() => {
@@ -93,12 +80,7 @@ export default function App() {
     if (audioContextRef.current.state === 'suspended') {
       audioContextRef.current.resume();
     }
-    setAudioInitialized(true);
-
-    // ダイアログを閉じる
-    if (startDialogRef.current && startDialogRef.current.open) {
-      startDialogRef.current.close();
-    }
+    audioInitializedRef.current = true;
 
     return audioContextRef.current;
   }
@@ -158,6 +140,11 @@ export default function App() {
 
   // 各和音ボタンのトグル処理
   async function toggleChordNote(index: number) {
+    // 初回タップ時にオーディオコンテキストを初期化
+    if (!audioInitializedRef.current) {
+      initAudioContext()
+    }
+
     const freqs = getChordFrequencies()
     const freq = freqs[index]
     const context = await getAudioContext()
@@ -299,24 +286,6 @@ export default function App() {
           borderLeftColor: '#889'
         }}
       >
-        {/* タップトゥースタートのダイアログ */}
-        <dialog
-          ref={startDialogRef}
-          onClick={initAudioContext}
-          className="m-auto p-8 rounded-lg border border-gray-300 shadow-md text-center w-4/5 max-w-md cursor-pointer"
-        >
-          <h2>{t('title')}</h2>
-          <p>{t('startPrompt')}</p>
-          <button
-            onClick={(e) => {
-              e.stopPropagation(); // ダイアログのクリックイベントとの重複を防止
-              initAudioContext();
-            }}
-            className="bg-accent text-black px-8 py-4 rounded border-none text-xl mt-4 cursor-pointer"
-          >
-            {t('startButton')}
-          </button>
-        </dialog>
 
         <h1 className="text-right py-1">{t('title')}</h1>
         <LcdScreen displayText={`${selectedPitch} ${chordType} / ${mode} / A4 = ${aFrequency} Hz`} />
@@ -409,7 +378,6 @@ export default function App() {
                     if (e.pointerType === 'touch') return;
 
                     e.preventDefault();
-                    initAudioContext();
                     toggleChordNote(index);
                     lastTouchedNoteRef.current = index;
                   }}
@@ -426,8 +394,6 @@ export default function App() {
                   }}
                   onTouchStart={(e) => {
                     e.preventDefault();
-                    // タッチ時にAudioContextを直接初期化
-                    initAudioContext();
                     toggleChordNote(index);
                     lastTouchedNoteRef.current = index;
                   }}
