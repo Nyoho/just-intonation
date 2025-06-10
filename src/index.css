@@ -4,3 +4,7 @@
   --color-accent: #0D8387;
   --color-mint-500: oklch(0.72 0.11 178);
 }
+
+body {
+  background-color: #1a1a1a;
+}
