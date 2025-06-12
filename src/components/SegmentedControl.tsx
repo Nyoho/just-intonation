@@ -55,7 +55,7 @@ const SegmentedControl = ({
         </p>
       )}
       <div
-        className="w-full flex flex-wrap rounded-md overflow-hidden border border-solid border-[#6a6a6a]"
+        className="w-full flex flex-wrap rounded-md overflow-hidden border border-solid border-[#6a6a6a] @container"
         style={{
           boxShadow: '0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1), inset 0 -1px 1px rgba(0,0,0,0.2)',
           display: columns ? 'grid' : 'flex',
@@ -65,7 +65,7 @@ const SegmentedControl = ({
         {options.map((option, i) => (
           <div
             key={option.value}
-            className={`flex-1 py-3 text-center font-bold cursor-pointer min-h-[50px] flex justify-center items-center select-none ${i < options.length - 1 && !columns ? 'border-r border-solid border-[#555]' : ''}`}
+            className={`flex-1 py-3 text-center font-bold text-[clamp(0.25rem,5cqi+0.5rem,1rem)] cursor-pointer min-h-[50px] flex justify-center items-center select-none ${i < options.length - 1 && !columns ? 'border-r border-solid border-[#555]' : ''}`}
             style={getOptionStyle(option.value)}
             onClick={() => onValueChange(option.value)}
           >
