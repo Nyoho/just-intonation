@@ -50,7 +50,7 @@ const SegmentedControl = ({
   return (
     <div className="flex flex-col items-center">
       {label && (
-        <p className="text-[#a0a0a0] text-xs h-8 flex items-start justify-center text-center leading-tight [text-shadow:0_1px_1px_rgba(0,0,0,0.5)]">
+        <p className="text-[#a0a0a0] text-xs h-5 flex items-start justify-center text-center leading-tight [text-shadow:0_1px_1px_rgba(0,0,0,0.5)]">
           {label}
         </p>
       )}

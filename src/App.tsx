@@ -288,9 +288,11 @@ export default function App() {
       >
 
         <h1 className="text-right py-1">{t('title')}</h1>
-        <LcdScreen displayText={`${selectedPitch} ${chordType} / ${mode} / A4 = ${aFrequency} Hz`} />
+        <div className="mb-2">
+          <LcdScreen displayText={`${selectedPitch} ${chordType} / ${mode} / A4 = ${aFrequency} Hz`} />
+        </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-3 gap-4 mb-2">
           <NumericStepper
             value={aFrequency}
             onValueChange={setAFrequency}
@@ -322,7 +324,7 @@ export default function App() {
         </div>
 
         {/* 根音選択 */}
-        <div className="mb-4">
+        <div className="mb-2">
           <SegmentedControl
             options={pitchClasses.map(pitch => ({
               value: pitch.label,
@@ -335,11 +337,11 @@ export default function App() {
           />
         </div>
 
-        <div className="mb-4">
+        <div className="mb-2">
         </div>
 
         {/* 波形選択 */}
-        <div className="mb-4">
+        <div className="mb-2">
           <SegmentedControl
             options={waveforms.map(wave => ({
               value: wave,
@@ -351,17 +353,19 @@ export default function App() {
           />
         </div>
 
-        <SegmentedControl
-          options={[
-            { value: 'equal', label: t('equalTemperament') },
-            { value: 'just', label: t('justIntonation') }
-          ]}
-          selectedValue={mode}
-          onValueChange={(value) => setMode(value as 'equal' | 'just')}
-          label="調律"
-        />
+        <div className="mb-2">
+          <SegmentedControl
+            options={[
+              { value: 'equal', label: t('equalTemperament') },
+              { value: 'just', label: t('justIntonation') }
+            ]}
+            selectedValue={mode}
+            onValueChange={(value) => setMode(value as 'equal' | 'just')}
+            label="調律"
+          />
+        </div>
 
-        <p className="text-sm">平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
+        <p className="text-sm truncate">平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
 
         {/* 各和音（根音・第3音・第5音）のトグルボタン */}
         <div className="mb-4">
@@ -372,7 +376,7 @@ export default function App() {
               {chordNoteNames.map((note, index) => (
                 <div
                   key={index}
-                  className={`flex-1 py-3 text-center font-bold cursor-pointer min-h-[100px] flex justify-center items-center select-none ${playingNotes[index] ? 'bg-pink-500 text-black' : ''} `}
+                  className={`flex-1 py-3 text-center font-bold cursor-pointer flex justify-center items-center select-none ${playingNotes[index] ? 'bg-pink-500 text-black' : ''} `}
                   onPointerDown={(e) => {
                     // モバイルの場合はonTouchStartで処理するため、ポインターイベントを無視
                     if (e.pointerType === 'touch') return;
