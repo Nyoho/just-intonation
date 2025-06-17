@@ -274,7 +274,7 @@ export default function App() {
   }, [aFrequency, selectedPitch, chordType, mode, octave, waveform])
 
   return (
-    <div className="flex justify-center items-center min-h-[100dvh] landscape:items-start landscape:py-2 bg-[#1a1a1a] box-border font-sans overflow-y-auto">
+    <div className="flex justify-center items-center min-h-[100dvh] bg-[#1a1a1a] box-border font-sans overflow-y-auto">
       <div
         className="rounded-xl px-4 py-2 w-full max-w-md landscape:max-w-none landscape:w-[95vw] landscape:flex landscape:flex-col"
         style={{
