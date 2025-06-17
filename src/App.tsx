@@ -274,9 +274,9 @@ export default function App() {
   }, [aFrequency, selectedPitch, chordType, mode, octave, waveform])
 
   return (
-    <div className="flex justify-center items-center h-[100dvh] bg-[#1a1a1a] box-border font-sans">
+    <div className="flex justify-center items-center min-h-[100dvh] landscape:items-start landscape:py-2 bg-[#1a1a1a] box-border font-sans overflow-y-auto">
       <div
-        className="rounded-xl px-4 w-full max-w-md"
+        className="rounded-xl px-4 py-2 w-full max-w-md landscape:max-w-none landscape:w-[95vw] landscape:flex landscape:flex-col"
         style={{
           color: '#ddd',
           backgroundImage: 'linear-gradient(145deg, #4a4a4a, #2c2c2c)',
@@ -288,11 +288,19 @@ export default function App() {
       >
 
         <h1 className="text-right py-1">{t('title')}</h1>
-        <div className="mb-2">
+
+        {/* LCD画面 */}
+        <div className="mb-2 landscape:hidden">
           <LcdScreen displayText={`${selectedPitch} ${chordType} / ${mode} / A4 = ${aFrequency} Hz`} />
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-2">
+        {/* 縦長時：A4周波数、オクターブ、和音タイプを横1列（3列） */}
+        {/* 横長時：LCD、A4周波数、オクターブ、和音タイプを横1列（4列） */}
+        <div className="grid grid-cols-3 gap-4 mb-2 landscape:grid-cols-[2fr_1fr_1fr_1fr] landscape:gap-2 landscape:items-end">
+          <div className="hidden landscape:block">
+            <LcdScreen displayText={`${selectedPitch} ${chordType} / ${mode} / A4 = ${aFrequency} Hz`} />
+          </div>
+
           <NumericStepper
             value={aFrequency}
             onValueChange={setAFrequency}
@@ -334,26 +342,24 @@ export default function App() {
             onValueChange={(value) => setSelectedPitch(value as string)}
             label={t('rootNote')}
             columns={6}
+            landscapeColumns={12}
           />
         </div>
 
-        <div className="mb-2">
-        </div>
+        {/* 横長時：波形選択と調律を横1列に */}
+        <div className="mb-2 landscape:grid landscape:grid-cols-2 landscape:gap-2">
+          <div className="mb-2 landscape:mb-0">
+            <SegmentedControl
+              options={waveforms.map(wave => ({
+                value: wave,
+                label: t(wave)
+              }))}
+              selectedValue={waveform}
+              onValueChange={(value) => setWaveform(value as OscillatorType)}
+              label={t('waveform')}
+            />
+          </div>
 
-        {/* 波形選択 */}
-        <div className="mb-2">
-          <SegmentedControl
-            options={waveforms.map(wave => ({
-              value: wave,
-              label: t(wave)
-            }))}
-            selectedValue={waveform}
-            onValueChange={(value) => setWaveform(value as OscillatorType)}
-            label={t('waveform')}
-          />
-        </div>
-
-        <div className="mb-2">
           <SegmentedControl
             options={[
               { value: 'equal', label: t('equalTemperament') },
@@ -365,10 +371,10 @@ export default function App() {
           />
         </div>
 
-        <p className="text-sm truncate">平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
+        <p className="text-sm truncate mb-2">平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。</p>
 
         {/* 各和音（根音・第3音・第5音）のトグルボタン */}
-        <div className="mb-4">
+        <div className="mb-4 landscape:order-last landscape:mb-2">
           <div
             className="col-span-4 flex flex-col items-center"
           >

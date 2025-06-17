@@ -10,6 +10,7 @@ interface SegmentedControlProps {
   label?: string;
   showSign?: boolean;
   columns?: number;
+  landscapeColumns?: number;
 }
 
 const SegmentedControl = ({
@@ -18,7 +19,8 @@ const SegmentedControl = ({
   onValueChange,
   label,
   showSign = false,
-  columns
+  columns,
+  landscapeColumns
 }: SegmentedControlProps) => {
   const getOptionStyle = (value: string | number): React.CSSProperties => {
     let style: React.CSSProperties = {
@@ -46,6 +48,7 @@ const SegmentedControl = ({
   };
 
   const gridCols = columns ? `repeat(${columns}, 1fr)` : undefined;
+  const landscapeGridCols = landscapeColumns ? `repeat(${landscapeColumns}, 1fr)` : undefined;
 
   return (
     <div className="flex flex-col items-center">
@@ -55,11 +58,12 @@ const SegmentedControl = ({
         </p>
       )}
       <div
-        className="w-full flex flex-wrap rounded-md overflow-hidden border border-solid border-[#6a6a6a] @container"
+        className={`w-full rounded-md overflow-hidden border border-solid border-[#6a6a6a] @container segmented-control-container ${landscapeColumns ? 'has-landscape-cols' : ''}`}
         style={{
           boxShadow: '0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1), inset 0 -1px 1px rgba(0,0,0,0.2)',
           display: columns ? 'grid' : 'flex',
-          gridTemplateColumns: gridCols
+          gridTemplateColumns: gridCols,
+          ['--landscape-cols' as string]: landscapeGridCols
         }}
       >
         {options.map((option, i) => (

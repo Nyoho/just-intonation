@@ -8,3 +8,11 @@
 body {
   background-color: #1a1a1a;
 }
+
+/* 横長時のSegmentedControl */
+@media (orientation: landscape) {
+  .segmented-control-container.has-landscape-cols {
+    display: grid !important;
+    grid-template-columns: var(--landscape-cols) !important;
+  }
+}
