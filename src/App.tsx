@@ -283,7 +283,9 @@ export default function App() {
           boxShadow: '0 15px 25px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.05), inset 0 -2px 4px rgba(0,0,0,0.5)',
           border: '1px solid #555',
           borderTopColor: '#889',
-          borderLeftColor: '#889'
+          borderLeftColor: '#889',
+          marginLeft: 'clamp(0px, calc((100vw - 800px) / 2), 5rem)',
+          marginRight: 'clamp(0px, calc((100vw - 800px) / 2), 5rem)'
         }}
       >
 
