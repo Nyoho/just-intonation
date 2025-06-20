@@ -298,7 +298,7 @@ export default function App() {
 
         {/* 縦長時：A4周波数、オクターブ、和音タイプを横1列（3列） */}
         {/* 横長時：LCD、A4周波数、オクターブ、和音タイプを横1列（4列） */}
-        <div className="grid grid-cols-3 gap-4 mb-2 landscape:grid-cols-[2fr_1fr_1fr_1fr] landscape:gap-2 landscape:items-end">
+        <div className="grid grid-cols-3 gap-4 mb-2 landscape:grid-cols-[2fr_1fr_1fr_1fr] landscape:gap-2 landscape:items-center">
           <div className="hidden landscape:block">
             <LcdScreen displayText={`${selectedPitch} ${chordType} / ${mode} / A4 = ${aFrequency} Hz`} />
           </div>
