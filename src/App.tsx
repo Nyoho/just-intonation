@@ -72,6 +72,15 @@ export default function App() {
     localStorage.setItem('selectedPitch', selectedPitch);
   }, [aFrequency, selectedPitch]);
 
+  useEffect(() => {
+    document.title = t('pageTitle');
+
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', t('pageDescription'));
+    }
+  }, [t]);
+
   // AudioContext の直接的な初期化（ユーザージェスチャーに紐づけるため）
   function initAudioContext() {
     if (!audioContextRef.current) {

@@ -1,5 +1,7 @@
 {
   "title": "Listen to Just Intonation",
+  "pageTitle": "Just Intonation Experience",
+  "pageDescription": "A web app to experience and compare just intonation and equal temperament with triads.",
   "aFrequency": "A4's Frequency (Hz)",
   "rootNote": "Root Note",
   "chordType": "Chord Type",
