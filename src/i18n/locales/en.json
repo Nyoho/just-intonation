@@ -16,6 +16,7 @@
   "fifthText": "5th",
   "startPrompt": "Tap anywhere to start audio",
   "startButton": "Start Audio",
+  "comparisonMessage": "Switch between equal temperament and just intonation to hear the difference, especially the 3rd.",
   "octave": "Octave",
   "waveform": "Waveform",
   "sine": "Sine",
