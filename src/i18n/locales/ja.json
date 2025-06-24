@@ -18,6 +18,7 @@
   "startButton": "音声の再生を開始する",
   "comparisonMessage": "平均律と純正律を切り替えて、聞き比べてみよう。特に第3音を。",
   "octave": "オクターブ",
+  "temperament": "音律",
   "waveform": "音色",
   "sine": "正弦波",
   "square": "矩形波",

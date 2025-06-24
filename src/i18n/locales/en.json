@@ -18,6 +18,7 @@
   "startButton": "Start Audio",
   "comparisonMessage": "Switch between equal temperament and just intonation to hear the difference, especially the 3rd.",
   "octave": "Octave",
+  "temperament": "Temperament",
   "waveform": "Waveform",
   "sine": "Sine",
   "square": "Square",

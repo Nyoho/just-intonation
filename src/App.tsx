@@ -378,7 +378,7 @@ export default function App() {
             ]}
             selectedValue={mode}
             onValueChange={(value) => setMode(value as 'equal' | 'just')}
-            label="調律"
+            label={t('temperament')}
           />
         </div>
 
