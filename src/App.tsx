@@ -298,7 +298,7 @@ export default function App() {
         }}
       >
 
-        <h1 className="text-right py-1">{t('title')}</h1>
+        <h1 className="text-right py-1 font-bold">{t('title')}</h1>
 
         {/* LCD画面 */}
         <div className="mb-2 landscape:hidden">
