@@ -285,7 +285,7 @@ export default function App() {
   return (
     <div className="flex justify-center items-center min-h-[100dvh] bg-[#1a1a1a] box-border font-sans overflow-y-auto">
       <div
-        className="rounded-xl px-4 py-2 w-full max-w-md landscape:max-w-none landscape:w-[95vw] landscape:flex landscape:flex-col"
+        className="rounded-xl px-4 py-2 w-full max-w-md landscape:max-w-[min(1000px,95vw)] landscape:flex landscape:flex-col"
         style={{
           color: '#ddd',
           backgroundImage: 'linear-gradient(145deg, #4a4a4a, #2c2c2c)',
