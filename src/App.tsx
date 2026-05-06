@@ -83,7 +83,7 @@ export default function App() {
 
   // AudioContext の直接的な初期化（ユーザージェスチャーに紐づけるため）
   function initAudioContext() {
-    if (!audioContextRef.current) {
+    if (!audioContextRef.current || audioContextRef.current.state === 'closed') {
       audioContextRef.current = new AudioContext();
     }
     if (audioContextRef.current.state === 'suspended') {
@@ -94,10 +94,30 @@ export default function App() {
     return audioContextRef.current;
   }
 
-  // AudioContext の取得（存在しない場合は生成、サスペンド状態なら再開し完了を待つ）
+  // AudioContext の取得。closed の場合は再生成し、playing 中のオシレーターを再起動する
   async function getAudioContext(): Promise<AudioContext> {
-    if (!audioContextRef.current) {
-      audioContextRef.current = new AudioContext()
+    if (!audioContextRef.current || audioContextRef.current.state === 'closed') {
+      const prevPlaying = { ...chordOscillatorsRef.current };
+      chordOscillatorsRef.current = {};
+      gainNodesRef.current = {};
+
+      audioContextRef.current = new AudioContext();
+
+      // Restart any oscillators that were playing before the context closed
+      const freqs = getChordFrequencies();
+      Object.keys(prevPlaying).forEach((key) => {
+        const i = Number(key);
+        const gainNode = audioContextRef.current!.createGain();
+        gainNode.gain.value = 0.7;
+        const oscillator = audioContextRef.current!.createOscillator();
+        oscillator.type = waveform;
+        oscillator.frequency.value = freqs[i];
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContextRef.current!.destination);
+        oscillator.start();
+        chordOscillatorsRef.current[i] = oscillator;
+        gainNodesRef.current[i] = gainNode;
+      });
     }
     if (audioContextRef.current.state === 'suspended') {
       await audioContextRef.current.resume()
